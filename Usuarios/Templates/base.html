@@ -9,12 +9,15 @@
     <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
     <link rel="stylesheet" href="{% static 'libs/bootstrap/css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'libs/fontawesome/css/all.css' %}">
-    
+    <!--  Datatables  -->
+    <link rel="stylesheet" type="text/css" href="{%static 'libs/DataTables/jquery.dataTables.min.css' %}" />
+    <!--  extension responsive  -->
+    <link rel="stylesheet" type="text/css" href="{% static 'libs/DataTables/Responsive/dataTables.min.css' %}">
+
     {% block extendHead %}{% endblock extendHead %}
         
 </head>
 <body>
-    
     {% if  request.path != "/login/"%}
     <a class="btn btn-light" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
         <i class="fa-solid fa-bars"></i>
@@ -25,10 +28,31 @@
           <h5 class="offcanvas-title" id="offcanvasExampleLabel">{{request.user.nombres|title}}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body">
+        <div class=" offcanvas-body">
+          <ul class="nav nav-pills flex-column">
+            <li class="nav-item">
+              <a class="nav-link 
+              {% if request.path == '/'%}active{% endif %} 
+              " aria-current="page" href="{% url 'index' %}">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'listarUsuarios' %}">Administración de Usuarios</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Administracion de Estudiantes</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Administrar Rutas</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Ver Carros</a>
+            </li>
+          </ul> 
+
           <a  class="btn btn-ligth btn-close-session" href="{% url 'logout' %}"><i class="fa-solid fa-power-off"></i></a>
         </div>
       </div>
+
     {% endif %}
         
        <div class="container">
@@ -40,6 +64,11 @@
 <script src="{% static 'libs/jquery/jquery.min.js' %}"></script>
 <script src="{% static 'libs/bootstrap/js/bootstrap.js' %}"></script>
 <script src="{% static 'js/main.js' %}"></script>
+ <!--   Datatables-->
+ <script type="text/javascript" src="{%static 'libs/DataTables/jquery.dataTables.min.js' %}"></script>
+ <!-- extension responsive -->
+ <script src="{% static 'libs/DataTables/Responsive/dataTables.min.js' %}"></script>
+
 {% block extendScript %}{% endblock extendScript %}
 </html>
 

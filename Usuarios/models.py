@@ -77,4 +77,7 @@ class Usuario(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.administrador
+    @property
+    def get_nombreCompleto(self):
+        return self.nombres.capitalize() +' '+self.apellidos.lower()
  

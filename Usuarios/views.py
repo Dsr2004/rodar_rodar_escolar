@@ -8,8 +8,10 @@ from django.contrib.auth.forms import AuthenticationForm #formulario de inicio d
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
+from django.views.generic import ListView
+
 from .forms import LoginForm
-from .models import Hijo
+from .models import Hijo, Usuario
 from .mixins import Directions
 import os
 from dotenv import load_dotenv
@@ -210,9 +212,8 @@ def BuscarRuta(request, placa, posicion):
 
 
 
-""""
-a=posicion del vehiculo
-b=segun el indice
-"""
-
-
+class Usuarios(ListView):
+    model = Usuario
+    template_name = "usuarios.html"
+    context_object_name = "usuarios"
+    

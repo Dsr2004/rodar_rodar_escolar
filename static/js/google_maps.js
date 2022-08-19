@@ -3,7 +3,6 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=" + google_api_key + "&
     google.maps.event.addDomListener(window, "load", initMap)
 })
 
-
 function initMap() {
     var directionsService = new google.maps.DirectionsService;
     var directionsDisplay = new google.maps.DirectionsRenderer({});
@@ -16,7 +15,6 @@ function initMap() {
     calculateAndDisplayRoute(directionsService, directionsDisplay);
 
 }
-
 const waypts = [
         {location: {lat: lat_c, lng: long_c},
         stopover: false},
@@ -27,7 +25,6 @@ const waypts = [
         {location: {lat: lat_f, lng: long_f},
         stopover: false}
         ];
-
 function calculateAndDisplayRoute(directionsService, directionsDisplay) {
     directionsService.route({
         origin: origin,

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+{% block titulo %}Administración de Usuarios{% endblock titulo %}
+{% block extendHead %}
+{% endblock extendHead %}
+
+{% block contenido %}
+
+{% if usuarios %}
+
+<table id="UsersTable"  class="display nowrap" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+            <th colspan="4">Datos</th>
+            <th colspan="3">Acciones</th>
+        </tr>
+        <tr>
+            <th>#</th>
+            <th>Usuario</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th><small><strong>Ver</strong></small></th>
+            <th><small><strong>Editar</strong></small></th>
+            <th><small><strong>Estado</strong></small></th>
+        </tr>
+     </thead>
+     <tbody>
+        {% for usuario in usuarios %}
+         <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{usuario.get_nombreCompleto}}</td>
+            <td>{{usuario.telefono}}</td>
+            <td>{{usuario.email}}</td>
+            <td>btn1</td>
+            <td>btn2</td>
+            <td>btn3</td>
+        </tbody>
+        {% endfor %}
+</table>
+
+{% else %}
+<h1>No hay usuarios que mostrar, reigtre uno primero</h1>
+{% endif %}
+     
+{% endblock contenido %}
+
+{% block extendScript %}
+<script>
+     $(document).ready(function () {
+      $('#UsersTable').DataTable({
+            "language": {
+               "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+           },
+           responsive:true
+      });
+    });
+</script>
+{% endblock extendScript %}
