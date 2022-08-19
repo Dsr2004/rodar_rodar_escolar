@@ -3,5 +3,5 @@ from .views import *
 from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
-    path('ListarUsuarios', login_required(Usuarios.as_view()), name='listarUsuarios'),
+    path('ListarUsuarios/', login_required(Usuarios.as_view()), name='listarUsuarios'),
 ]

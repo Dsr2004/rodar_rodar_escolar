@@ -31,6 +31,8 @@ urlpatterns = [
     path("logout/", LogoutView.as_view(),{'next_page': settings.LOGOUT_REDIRECT_URL}, name="logout"),
     path("buscarRuta/<str:placa>/<int:posicion>", BuscarRuta, name="buscarRuta"),
     path('Admin/', include('Usuarios.urls')),
+
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

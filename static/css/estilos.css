@@ -9,3 +9,7 @@
     left: 0;
     margin-bottom: 10px !important;
 }
+.homecenter{
+    position: relative;
+    margin-top: 30vh;
+}
