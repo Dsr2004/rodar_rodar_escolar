@@ -1,0 +1,11 @@
+.CanvasMenu{
+    position: relative;
+}
+
+.btn-close-session{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    margin-bottom: 10px !important;
+}

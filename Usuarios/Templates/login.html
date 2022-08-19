@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Inicio de Sesión{% endblock titulo %}
+
+{% block contenido %}
+
+<div class="card" style="width: 40rem;">
+    <div class="card-body">
+        <form action="" method="post" autocomplete="off">
+            <div class="input-group mb-4 ">
+                <span class="input-group-text" id="addon-wrapping"><i class="fa-solid fa-user"></i></span>
+                {{form.username}}
+              </div>
+              <div class="input-group mb-4 ">
+                <span class="input-group-text" id="addon-wrapping"><i class="fa-solid fa-lock"></i></span>
+                {{form.password}}
+              </div>
+            {%csrf_token%}
+            <div style="width: 100%"></div>
+            <button type="submit" class="w-100 btn btn-light btn-block¿">Iniciar Sesión</button>
+            </div>
+        </form>
+    </div>
+{% endblock contenido %}
+    

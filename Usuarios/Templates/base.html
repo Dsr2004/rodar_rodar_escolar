@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block titulo %}Base del proyecto{% endblock titulo %}</title>
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+    <link rel="stylesheet" href="{% static 'libs/bootstrap/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'libs/fontawesome/css/all.css' %}">
+    
+    {% block extendHead %}{% endblock extendHead %}
+        
+</head>
+<body>
+    
+    {% if  request.path != "/login/"%}
+    <a class="btn btn-light" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+        <i class="fa-solid fa-bars"></i>
+      </a>
+     
+      <div class="CanvasMenu offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasExampleLabel">{{request.user.nombres|title}}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <a  class="btn btn-ligth btn-close-session" href="{% url 'logout' %}"><i class="fa-solid fa-power-off"></i></a>
+        </div>
+      </div>
+    {% endif %}
+        
+       <div class="container">
+        
+        {% block contenido %}{% endblock contenido %}
+            
+       </div>
+</body>
+<script src="{% static 'libs/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'libs/bootstrap/js/bootstrap.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
+{% block extendScript %}{% endblock extendScript %}
+</html>
+
+
