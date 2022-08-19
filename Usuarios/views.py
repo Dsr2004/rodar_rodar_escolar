@@ -90,6 +90,7 @@ def index(request):
     return render(request, "index.html", contexto)
 
 def Login(request):
+    context = {}
     if request.method == "POST":
         form = LoginForm(request,data=request.POST) #con esto se le pasasn los datos al formulario, inserción
         if form.is_valid():
@@ -98,13 +99,20 @@ def Login(request):
             usuario = authenticate(username=nombre, password = contrasena)
 
             if usuario is not None:
-                login(request, usuario)
-                return redirect("index")
-            else:
-                return HttpResponse("contraseña incorrecta")
+                if usuario.estado == 1:
+                    login(request, usuario)
+                    return redirect("index")
+                else: 
+                    context['error']="Este usuario se encuentra inhabilitado"
         else:
-            return HttpResponse("el usuario no existe")
-    return render(request, "login.html", {"form":LoginForm})
+            try:
+                Usuario.objects.get(usuario=form.cleaned_data.get('username'))
+                context['error']="La contraseña es incorrecta"
+            except:
+                context['error']="El usuario ingresado no existe"
+                
+    context['form'] = LoginForm
+    return render(request, "login.html", context)
 
 
 def logout(request):

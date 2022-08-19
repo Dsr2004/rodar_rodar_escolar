@@ -57,6 +57,7 @@ class Usuario(AbstractBaseUser):
     hijos = models.ManyToManyField(Hijo)
     telefono = models.CharField(max_length=10)
     email = models.EmailField('Correo Electrónico', unique=True)
+    estado = models.BooleanField("Estado del usuario", default=True)
     objects = UsuarioManager()
 
 
@@ -74,6 +75,7 @@ class Usuario(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
+    
     @property
     def is_staff(self):
         return self.administrador
