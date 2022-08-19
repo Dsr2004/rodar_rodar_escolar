@@ -57,6 +57,7 @@ class Usuario(AbstractBaseUser):
     hijos = models.ManyToManyField(Hijo)
     telefono = models.CharField(max_length=10)
     email = models.EmailField('Correo Electrónico', unique=True)
+    estado = models.BooleanField("Estado del usuario", default=True)
     objects = UsuarioManager()
 
 

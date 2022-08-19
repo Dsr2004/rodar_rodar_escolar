@@ -36,7 +36,9 @@
               " aria-current="page" href="{% url 'index' %}">Inicio</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'listarUsuarios' %}">Administración de Usuarios</a>
+              <a class="nav-link 
+              {% if request.path == '/Admin/ListarUsuarios'%}active{% endif %} 
+              " href="{% url 'listarUsuarios' %}">Administración de Usuarios</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Administracion de Estudiantes</a>

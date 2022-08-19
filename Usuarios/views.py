@@ -99,7 +99,11 @@ def Login(request):
 
             if usuario is not None:
                 login(request, usuario)
-                return redirect("index")
+                if 'next' in request.GET:
+                    return redirect(request.GET.get('next'))
+                else:
+                    print("no hay next")
+                    return redirect("index")
             else:
                 return HttpResponse("contraseña incorrecta")
         else:
@@ -167,9 +171,9 @@ def BuscarRuta(request, placa, posicion):
     dif_lat = abs(lat_a - lat_f)
     dif_log = abs(long_a - long_f)
 
-    #funcion que cambia el estado de la posicion de un hijo
-    # if dif_lat < 0.0005 and dif_log < 0.0005:
-    #     Hijo.objects.filter(placa=placa).filter(posicion=posicion).update(estado=False)
+    # funcion que cambia el estado de la posicion de un hijo
+    if dif_lat < 0.0005 and dif_log < 0.0005:
+        Hijo.objects.filter(placa=placa).filter(posicion=posicion).update(estado=False)
         
 
     if lat_a and lat_b and lat_c and lat_d:
@@ -209,7 +213,6 @@ def BuscarRuta(request, placa, posicion):
     }
    
     return render(request, "mapa.html", context)
-
 
 
 class Usuarios(ListView):
