@@ -1,8 +1,9 @@
+from multiprocessing import get_context
 import pandas as pd
 import mygeotab 
 from datetime import datetime, timedelta
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import login, logout, authenticate  #es para autenticar, iniciar y cerrar la sesión
 from django.contrib.auth.forms import AuthenticationForm #formulario de inicio de sesion ya incluye usuario y password
 from django.contrib.auth.decorators import login_required
@@ -12,8 +13,9 @@ from django.views.generic import ListView
 
 from .forms import LoginForm
 from .models import Hijo, Usuario
-from .mixins import Directions
+from .mixins import Directions, if_admin
 import os
+import json
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -99,11 +101,16 @@ def Login(request):
             usuario = authenticate(username=nombre, password = contrasena)
 
             if usuario is not None:
-                if usuario.estado == 1:
+                print(usuario.estado)
+                if usuario.estado:
                     login(request, usuario)
-                    return redirect("index")
+                    if 'next' in request.GET:
+                        return redirect(request.GET.get('next'))
+                    else:
+                        return redirect("index")
                 else: 
                     context['error']="Este usuario se encuentra inhabilitado"
+                    
         else:
             try:
                 Usuario.objects.get(usuario=form.cleaned_data.get('username'))
@@ -175,9 +182,9 @@ def BuscarRuta(request, placa, posicion):
     dif_lat = abs(lat_a - lat_f)
     dif_log = abs(long_a - long_f)
 
-    #funcion que cambia el estado de la posicion de un hijo
-    # if dif_lat < 0.0005 and dif_log < 0.0005:
-    #     Hijo.objects.filter(placa=placa).filter(posicion=posicion).update(estado=False)
+    # funcion que cambia el estado de la posicion de un hijo
+    if dif_lat < 0.0005 and dif_log < 0.0005:
+        Hijo.objects.filter(placa=placa).filter(posicion=posicion).update(estado=False)
         
 
     if lat_a and lat_b and lat_c and lat_d:
@@ -219,9 +226,26 @@ def BuscarRuta(request, placa, posicion):
     return render(request, "mapa.html", context)
 
 
-
 class Usuarios(ListView):
     model = Usuario
     template_name = "usuarios.html"
-    context_object_name = "usuarios"
     
+    def get(self, request, *args, **kwargs):
+        Admin = if_admin(request)
+        if Admin == False:
+            return redirect("index")
+        context = {"usuarios":self.model.objects.filter(administrador=0).exclude(pk = request.user.pk)}
+        return render(request, self.template_name,context)
+    
+def estadoUsuarios(request):
+    if request.method == "POST":
+        usuario = Usuario.objects.get(pk=request.POST.get('pk'))
+        if usuario.estado:
+            usuario.estado = False
+            usuario.save()
+            return JsonResponse({"succes":"Se ha inhabilitado el usuario correctamente"})      
+        
+        else:
+            usuario.estado = True
+            usuario.save()
+            return JsonResponse({"success":"Se ha habilitado el usuario correctamente"})

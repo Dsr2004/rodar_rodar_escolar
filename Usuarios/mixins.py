@@ -67,3 +67,9 @@ def Directions(*args, **kwargs):
         "duration": format_timespan(duration),
         "route": route_list
         }
+
+def if_admin(request):
+    if request.user.administrador:
+        return True
+    else:
+        return False

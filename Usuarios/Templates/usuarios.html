@@ -5,7 +5,8 @@
 {% endblock extendHead %}
 
 {% block contenido %}
-
+<h1>Administración de Usuarios</h1>
+<hr>
 {% if usuarios %}
 
 <table id="UsersTable"  class="display nowrap" cellspacing="0" width="100%">
@@ -31,11 +32,17 @@
             <td>{{usuario.get_nombreCompleto}}</td>
             <td>{{usuario.telefono}}</td>
             <td>{{usuario.email}}</td>
-            <td>btn1</td>
-            <td>btn2</td>
-            <td>btn3</td>
-        </tbody>
+            <td><a href=""><i class="fa-solid fa-eye"></i></a></td>
+            <td><a href=""><i class="fa-solid fa-pencil"></i></a></td>
+            <td>
+                <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" {% if usuario.estado  %}
+                  checked
+                {% endif %}>
+              </div></td>
+        </tr>
         {% endfor %}
+    </tbody>
 </table>
 
 {% else %}
