@@ -5,7 +5,15 @@
 {% endblock extendHead %}
 
 {% block contenido %}
-<h1>Administración de Usuarios</h1>
+<div class="row">
+    <div class="col-10">
+        <h1>Administración de Usuarios</h1>
+    </div>
+    <div class="col-2">
+        <a href="" class="btn btn-dark"><i class="fa-solid fa-user-plus"></i></a>
+    </div>
+</div>
+
 <hr>
 {% if usuarios %}
 
@@ -46,7 +54,7 @@
 </table>
 
 {% else %}
-<h1>No hay usuarios que mostrar, reigtre uno primero</h1>
+<h1>No hay usuarios que mostrar, registre uno primero</h1>
 {% endif %}
      
 {% endblock contenido %}

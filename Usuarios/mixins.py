@@ -1,8 +1,7 @@
-from django.conf import settings
 import requests
-import json
-import datetime
+from django.conf import settings
 from humanfriendly import format_timespan
+from django.shortcuts import redirect
 '''
 Handles directions from Google
 '''
@@ -67,3 +66,12 @@ def Directions(*args, **kwargs):
         "duration": format_timespan(duration),
         "route": route_list
         }
+
+def if_admin(request):
+    if request.user.administrador:
+        return True
+    else:
+        return False
+
+  
+           

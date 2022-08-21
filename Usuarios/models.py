@@ -53,11 +53,11 @@ class Usuario(AbstractBaseUser):
     usuario = models.CharField("Usuario", unique=True, max_length=15)
     nombres  = models.CharField("Nombre de usuario", blank=False, null=False, max_length=15)
     apellidos = models.CharField("Apellido de usuario", blank=False, null=False, max_length=25)
-    administrador = models.BooleanField(default=False)
     hijos = models.ManyToManyField(Hijo)
     telefono = models.CharField(max_length=10)
     email = models.EmailField('Correo Electrónico', unique=True)
     estado = models.BooleanField("Estado del usuario", default=True)
+    administrador = models.BooleanField(default=False)
     objects = UsuarioManager()
 
 

@@ -2,17 +2,16 @@ import pandas as pd
 import mygeotab 
 from datetime import datetime, timedelta
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import login, logout, authenticate  #es para autenticar, iniciar y cerrar la sesión
-from django.contrib.auth.forms import AuthenticationForm #formulario de inicio de sesion ya incluye usuario y password
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
-from django.views.generic import ListView
+from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 
-from .forms import LoginForm
+from .forms import LoginForm, UsuarioForm
 from .models import Hijo, Usuario
-from .mixins import Directions
+from .mixins import Directions, if_admin
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -92,24 +91,22 @@ def index(request):
 def Login(request):
     context = {}
     if request.method == "POST":
-        form = LoginForm(request,data=request.POST) #con esto se le pasasn los datos al formulario, inserción
+        form = LoginForm(request,data=request.POST) #con esto se le pasan los datos al formulario, inserción
         if form.is_valid():
             nombre = form.cleaned_data.get("username")
             contrasena = form.cleaned_data.get("password")
             usuario = authenticate(username=nombre, password = contrasena)
 
             if usuario is not None:
-                login(request, usuario)
                 if usuario.estado == 1:
                     login(request, usuario)
-                    return redirect("index")
+                    if 'next' in request.GET:
+                        return redirect(request.GET.get('next'))
+                    else:
+                        return redirect("index")
                 else: 
                     context['error']="Este usuario se encuentra inhabilitado"
-                    
-                if 'next' in request.GET:
-                    return redirect(request.GET.get('next'))
-                else:
-                    return redirect("index")
+
         else:
             try:
                 Usuario.objects.get(usuario=form.cleaned_data.get('username'))
@@ -143,8 +140,6 @@ def BuscarRuta(request, placa, posicion):
     df['Lat'] = Lat
     df['Lon'] = Lon
     df['Pos'] = Pos
-
-    
 
     #"---------------------------------"
     # long_a, lat_a= Locali_placa(placa)#inicio
@@ -228,5 +223,27 @@ def BuscarRuta(request, placa, posicion):
 class Usuarios(ListView):
     model = Usuario
     template_name = "usuarios.html"
-    context_object_name = "usuarios"
     
+    def get(self, request, *args, **kwargs):
+        Admin = if_admin(request)
+        if Admin == False:
+            return redirect("index")
+        context = {"usuarios":self.model.objects.filter(administrador=False).exclude(pk = request.user.pk)}
+        return render(request, self.template_name,context)
+
+class CrearUsuario(CreateView):
+    model = Usuario
+    form_class = UsuarioForm
+    
+def estadoUsuarios(request):
+    if request.method == "POST":
+        usuario = Usuario.objects.get(pk=request.POST.get('pk'))
+        if usuario.estado:
+            usuario.estado = False
+            usuario.save()
+            return JsonResponse({"succes":"Se ha inhabilitado el usuario correctamente"})      
+        
+        else:
+            usuario.estado = True
+            usuario.save()
+            return JsonResponse({"success":"Se ha habilitado el usuario correctamente"})
