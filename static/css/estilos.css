@@ -16,3 +16,39 @@
 .requerido{
     color: red !important;
 }
+.buttonSweetalert{
+    margin-left: 20px !important;
+}
+/* Estilos del mapa */
+.list-info{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.list-info strong{
+    font-weight: 700;
+}
+.mapActions{
+ position: relative;
+ float: right;
+ right: 0;
+}
+.mapActions .buttons .textMap{
+    display: none;
+}
+.mapActions .buttons #togleMapPlay:hover .textMap,
+.mapActions .buttons #togleMapStop:hover .textMap{
+    display: block;
+}
+.mapActions .buttons #togleMapPlay .flexo,
+.mapActions .buttons #togleMapStop .flexo{
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 17px;
+    padding: 3px;
+}
+.mapActions .buttons #togleMapPlay .flexo div,
+.mapActions .buttons #togleMapStop .flexo div{
+    margin-left: 5px;
+    margin-top: -4px;
+}

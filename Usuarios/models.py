@@ -17,13 +17,13 @@ class Hijo(models.Model):
     latitud = models.FloatField("latitud donde vive",blank=False, null=False) #validacion de minimo 5 caracteres despues del punto
     longitud = models.FloatField("longitud donde vive",blank=False, null=False) 
     placa = models.CharField("Placa del carro", blank=False, null=False, max_length=6, validators=[MinLengthValidator(6)])
-    posicion = models.IntegerField("Posicion del hijo", blank=False, null=False)
+    posicion = models.IntegerField("Posicion del hijo")
     estado = models.BooleanField("Estado del viaje", default=True)
     class Meta:
         db_table = "hijos"
 
     def __str__(self) -> str:
-        return f"{self.nombres} {self.apellido}"
+        return  self.nombres.capitalize() +' '+self.apellidos.lower()
 
     def get_nombreCompleto(self):
         return self.nombres.capitalize() +' '+self.apellidos.lower()

@@ -8,7 +8,7 @@ from django.conf import settings
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 
-from .forms import LoginForm, UsuarioForm
+from .forms import HijoForm, LoginForm, UsuarioForm
 from .models import Hijo, Usuario
 from .mixins import Directions, if_admin
 import os
@@ -121,9 +121,7 @@ def BuscarRuta(request, placa, posicion):
     print(placa)
     print(posicion)
     hijos=Hijo.objects.filter(placa=placa).filter(posicion__lte=posicion)
-    print("hijos")
-    for hijo in hijos:
-        print(hijo.nombres)
+    hijoBuscado = Hijo.objects.get(placa=placa, posicion=posicion)
     Lat=[]
     Lon=[]
     Pos=[]
@@ -146,13 +144,10 @@ def BuscarRuta(request, placa, posicion):
 
     df.sort_values(by=['Pos'], inplace=True)
     df.reset_index(drop=True, inplace=True)
-    print("Dataframe")
-    print(df)
 
     while len(df) != 6:
         df.loc[len(df)] = [df['Lat'][len(df) - 1],
                            df['Lon'][len(df) - 1], df['Pos'][len(df) - 1]+1]
-    print(df)
 
     #el b es el ultimo de todos los puntos
     lat_b = df.Lat[5]
@@ -191,7 +186,6 @@ def BuscarRuta(request, placa, posicion):
         lat_f= lat_f,
         long_f=long_f,
         )
-    print(type(lat_a))
     context = {
     "google_api_key": settings.API_KEY,
     "lat_a": lat_a,
@@ -211,6 +205,7 @@ def BuscarRuta(request, placa, posicion):
     "directions": directions,
     "placa": placa,
     "posicion":posicion,
+    "hijo": hijoBuscado,
     }
    
     return render(request, "mapa.html", context)
@@ -221,9 +216,6 @@ def RecargarRuta(request):
         placa = request.POST.get('placa')
         posicion = request.POST.get('posicion')
         hijos=Hijo.objects.filter(placa=placa).filter(posicion__lte=posicion)
-        print("hijos")
-        for hijo in hijos:
-            print(hijo.nombres)
         Lat=[]
         Lon=[]
         Pos=[]
@@ -237,19 +229,18 @@ def RecargarRuta(request):
         df['Pos'] = Pos
 
         "---------------------------------"
-        long_a, lat_a= Locali_placa(placa)#inicio
+        long_a = -75.557174
+        lat_a = 6.319017
+        # long_a, lat_a= Locali_placa(placa)#inicio
 
         df = df.append({"Lat":lat_a, "Lon":long_a, "Pos": 0}, ignore_index=True)
 
         df.sort_values(by=['Pos'], inplace=True)
         df.reset_index(drop=True, inplace=True)
-        print("Dataframe")
-        print(df)
 
         while len(df) != 6:
             df.loc[len(df)] = [df['Lat'][len(df) - 1],
                             df['Lon'][len(df) - 1], df['Pos'][len(df) - 1]+1]
-        print(df)
 
         #el b es el ultimo de todos los puntos
         lat_b = df.Lat[5]
@@ -307,6 +298,7 @@ def RecargarRuta(request):
         "destination": f'{lat_b}, {long_b}',
         "directions": directions,
         "placa": placa,
+        "posicion":posicion
         }
     
         return JsonResponse(context)
@@ -342,16 +334,84 @@ class VerUsuario(DetailView):
         context['hijos'] = Hijo.objects.filter(usuario=self.object)
         return context
 
+class EditarUsuario(UpdateView):
+    model = Usuario
+    form_class = UsuarioForm
+    template_name = "Usuarios/editar.html"
+    success_url = reverse_lazy("listarUsuarios")
 
-def estadoUsuarios(request):
+    def post(self, request, *args, **kwargs):
+        post = request.POST.copy()
+        post["usuario"] = self.get_object().usuario
+        form = self.form_class(post, instance=self.get_object())
+        print()
+        print(self.get_object().usuario)
+        form.fields["usuario"].initial = self.get_object().usuario
+        # form["usuario"]=self.get_object().usuario
+        if form.is_valid():
+            form.save()
+            return redirect(self.success_url)
+        return super().post(request, *args, **kwargs)
+
+    def form_invalid(self, form):
+        print(form.errors)
+        return JsonResponse({"errores": form.errors}, status=400)
+
+def EstadoUsuario(request):
     if request.method == "POST":
         usuario = Usuario.objects.get(pk=request.POST.get('pk'))
         if usuario.estado:
             usuario.estado = False
             usuario.save()
-            return JsonResponse({"succes":"Se ha inhabilitado el usuario correctamente"})      
+            return JsonResponse({"succes":"Se ha inhabilitado el usuario correctamente"}, status=200)    
         
         else:
             usuario.estado = True
             usuario.save()
-            return JsonResponse({"success":"Se ha habilitado el usuario correctamente"})
+            return JsonResponse({"success":"Se ha habilitado el usuario correctamente"},status=200)
+
+class Estudiantes(ListView):
+    model = Hijo
+    template_name = "estudiantes.html"
+    
+    def get(self, request, *args, **kwargs):
+        Admin = if_admin(request)
+        if Admin == False:
+            return redirect("index")
+        context = {"hijos":self.model.objects.all().order_by("-estado")}
+        return render(request, self.template_name,context)
+
+class CrearEstudiante(CreateView):
+    model = Hijo
+    form_class = HijoForm
+    template_name = "Estudiantes/crear.html"
+    success_url = reverse_lazy("listarEstudiantes")
+
+    def form_invalid(self, form):
+        print(form.errors)
+        return JsonResponse({"errores": form.errors}, status=400)
+
+class VerEstudiante(DetailView):
+    model = Hijo
+    template_name = "Estudiantes/ver.html"
+    context_object_name = "estudiante"
+
+class EditarEstudiante(UpdateView):
+    model = Hijo
+    form_class = HijoForm
+    template_name = "Estudiantes/editar.html"
+    success_url = reverse_lazy("listarEstudiantes")
+
+def EstadoEstudiante(request):
+    if request.method == "POST":
+        estudiante = Hijo.objects.get(pk=request.POST.get('pk'))
+        if estudiante.estado:
+            estudiante.estado = False
+            estudiante.save()
+            return JsonResponse({"succes":"Se ha inhabilitado el estudiante correctamente"}, status=200)    
+        
+        else:
+            estudiante.estado = True
+            estudiante.save()
+            return JsonResponse({"success":"Se ha habilitado el estudiante correctamente"},status=200)
+

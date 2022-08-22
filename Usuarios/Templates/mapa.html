@@ -6,19 +6,59 @@
 {% endblock extendHead %}
 
 {% block contenido %}
-<div id="placa">
-placa: {{placa}}
+<h2>Está viendo la ruta de: <small>{{hijo.get_nombreCompleto}}</small></h2>
+<div class="information">
+  <table class="table table-borderless">
+    <thead>
+      <tr>
+        <td>
+          <strong>Placa</strong> 
+        </td>
+        <td>
+          <strong>Distancia</strong> 
+        </td>
+        <td>
+          <strong>Duración</strong> 
+        </td>
+        <td style="text-align:right;"><strong>Acciones del Mapa</strong></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td id="placa">{{placa}}</td>
+        <td id="distancia">{{directions.distance}}</td>
+        <td id="duracion">{{directions.duration}}</td>
+        <td class="mapActions">
+          <div class="buttons">
+            <button id="togleMapPlay" type="button" class="btn btn-outline-info btn-sm" onclick="play()"><div class="flexo"><i class="fa-solid fa-play"></i> <div class="textMap">Reanudar</div></div> </button><!--play -->
+            <button id="togleMapStop" type="button" class="btn btn-outline-warning btn-sm" onclick="stop()"><div class="flexo"><i class="fa-solid fa-stop"></i> <div class="textMap">Parar</div></div> </button><!--stop -->
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
 </div>
 <br>
-<div id="duracion">
-duración: {{directions.duration}}
-</div>
-<br>
-<div id="distancia">
-distancia: {{directions.distance}}
-</div>
 <script>
-document.getElementById("duracion").innerHTML = document.getElementById("duracion").innerHTML.replace("minutes","minutos").replace("and","y").replace("seconds","segundos");</script>
+var repeat = true;
+Stop = document.getElementById("togleMapStop");
+Play = document.getElementById("togleMapPlay");
+Play.style.display = "none";
+
+function stop() { 
+  Stop.style.display = "none";
+  Play.style.display = "block";
+  repeat = false;
+}
+function play() {
+  Stop.style.display = "block";
+  Play.style.display = "none";
+  repeat = true;
+  reload()
+}
+document.getElementById("duracion").innerHTML = document.getElementById("duracion").innerHTML.replace("minutes","minutos").replace("and","y").replace("seconds","segundos");
+</script>
 <div class="div-container">
     <div class="map-container">
         <div id="map-route"></div>
