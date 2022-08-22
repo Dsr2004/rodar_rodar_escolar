@@ -1,0 +1,60 @@
+<div class="modal-dialog  modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ver Detalles de {{usuario.nombres|title}}</strong></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row" style="background-color: rgba(128, 128, 128, 0.364);">
+            <h3><sub>Nombres y apellidos</sub></h3>
+            <div class="col-md-6">
+                <Label><strong>Nombres: </strong></Label>
+                <h5><small>{{usuario.nombres}}</small></h5>
+            </div>
+            <br>
+            <div class="col-md-6">
+                <Label><strong>Apellidos: </strong></Label>
+                <h5><small>{{usuario.apellidos}}</small></h5>
+            </div>
+        </div>
+        <div class="row">
+            <h3><sub>Información de contacto</sub></h3>
+            <div class="col-6">
+                <Label><strong>Teléfono: </strong></Label>
+                <h5><small>{{usuario.telefono}}</small></h5>
+            </div>
+            <div class="col-6">
+                <Label><strong>Correo Electronico:: </strong></Label>
+                <h5><small>{{usuario.email}}</small></h5>
+            </div>
+        </div>
+           <div class="row" style="background-color: rgba(128, 128, 128, 0.364);">
+            <h3><sub>Información del sistema</sub></h3>
+            <div class="col-6">
+                <Label><strong>Nombre de Usuario: </strong></Label>
+                <h5><small>{{usuario.usuario}}</small></h5>
+            </div>
+            <div class="col-6">
+                <Label><strong>Estado: </strong></Label>
+                <h5><small>
+                    {% if usuario.estado %}
+                    ACTIVO
+                    {% else %}
+                    INACTIVO
+                    {% endif %}    
+                </small></h5>
+            </div>
+            </div>
+
+            <h3><sub>Información de los hijos</sub></h3>
+            <ul class="list-group">
+                {% for hijo in hijos %}
+                <li class="list-group-item">{{hijo}}</li>
+                {% endfor %}
+              </ul>
+           
+           
+           
+    </div>
+</div>
+

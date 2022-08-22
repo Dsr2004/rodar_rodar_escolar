@@ -1,0 +1,64 @@
+<div class="modal-dialog  modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Crear Usuario</strong></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'crearUsuario' %}" method="post" id="crearUsuarioForm">
+            {% csrf_token %}
+            <Label><strong>Nombres: <sup class="requerido">(*)</sup></strong></Label>
+            {{form.nombres}}
+            <p id="nombres" class="bg-light text-danger" style="color: #dc3545;"></p>
+            <br>
+            <Label><strong>Apellidos: <sup class="requerido">(*)</sup></strong></Label>
+            {{form.apellidos}}
+            <p id="apellidos" class="bg-light text-danger" style="color: #dc3545;"></p>
+            <br>
+            <Label><strong>Teléfono: <sup class="requerido">(*)</sup></strong></Label>
+            {{form.telefono}}
+            <p id="telefono" class="bg-light text-danger" style="color: #dc3545;"></p>
+            <br>
+            <Label><strong>Correo Electronico: <sup class="requerido">(*)</sup></strong></Label>
+            {{form.email}}
+            <p id="email" class="bg-light text-danger" style="color: #dc3545;"></p>
+            <br>
+            <Label><strong>Nombre de Usuario: <sup class="requerido">(*)</sup></strong></Label>
+            {{form.usuario}}
+            <p id="usuario" class="bg-light text-danger" style="color: #dc3545;"></p>
+        </form>
+        <hr>
+        <button id="CrearUsuarioBoton" class="btn btn-success w-100">Crear Usuario</button>
+      </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#CrearUsuarioBoton').click(function () {
+            var form = $('#crearUsuarioForm');
+            $.ajax({
+                url: form.attr('action'),
+                type: form.attr('method'),
+                data: form.serialize(),
+                success: function (data) {
+                    swal.fire({
+                            title: "Exito!",
+                            text: "Usuario creado con exito!",
+                            icon: "success",
+                            button: "Aceptar",
+                        }).then(function() {
+                            location.reload();
+                        });
+                       
+                },error: function (data) {
+                    errores = data.responseJSON.errores;
+                    for (let i in errores) {
+                        let x=form.find('input[name='+i+']')
+                        x.addClass("is-invalid")
+                        $("#"+i).text(errores[i])
+                    }
+                }
+            });
+        });
+    });
+</script>

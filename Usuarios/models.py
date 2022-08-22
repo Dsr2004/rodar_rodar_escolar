@@ -1,10 +1,19 @@
+import random
+# ***********correo***********
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from django.template.loader import render_to_string
+# ***********correo***********
+
 from django.db import models
 from  django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core.validators import MinLengthValidator
+from django.db.models.signals import pre_save
 
 class Hijo(models.Model):
     nombres  =models.CharField("Nombre del hijo", blank=False, null=False, max_length=15)
-    apellido = models.CharField("Apellido del hijo", blank=False, null=False, max_length=25)
+    apellidos = models.CharField("Apellido del hijo", blank=False, null=False, max_length=25)
     latitud = models.FloatField("latitud donde vive",blank=False, null=False) #validacion de minimo 5 caracteres despues del punto
     longitud = models.FloatField("longitud donde vive",blank=False, null=False) 
     placa = models.CharField("Placa del carro", blank=False, null=False, max_length=6, validators=[MinLengthValidator(6)])
@@ -16,6 +25,8 @@ class Hijo(models.Model):
     def __str__(self) -> str:
         return f"{self.nombres} {self.apellido}"
 
+    def get_nombreCompleto(self):
+        return self.nombres.capitalize() +' '+self.apellidos.lower()
 
 class UsuarioManager(BaseUserManager):
     def create_user(self,usuario,nombres,apellidos,telefono,email,password=None):
@@ -54,7 +65,7 @@ class Usuario(AbstractBaseUser):
     nombres  = models.CharField("Nombre de usuario", blank=False, null=False, max_length=15)
     apellidos = models.CharField("Apellido de usuario", blank=False, null=False, max_length=25)
     hijos = models.ManyToManyField(Hijo)
-    telefono = models.CharField(max_length=10)
+    telefono = models.CharField(max_length=10, validators=[MinLengthValidator(10)])
     email = models.EmailField('Correo Electrónico', unique=True)
     estado = models.BooleanField("Estado del usuario", default=True)
     administrador = models.BooleanField(default=False)
@@ -83,3 +94,19 @@ class Usuario(AbstractBaseUser):
     def get_nombreCompleto(self):
         return self.nombres.capitalize() +' '+self.apellidos.lower()
  
+def pre_save_usuario(sender, instance, *args, **kwargs):
+    if instance._state.adding is True:
+        instance.estado = True
+        if not instance.password:
+            minus = 'abcdefghijklmnopqrstuvwxyz'
+            mayus = minus.upper()
+            numeros = '1234567890'
+            simbolos = '!@#$%^&*_+=?/;:'
+            longitud = 8
+            base = minus + mayus + numeros + simbolos
+            muestra = random.sample(base, longitud)
+            # password = ''.join(muestra)
+            password = "1234"
+            instance.set_password(password)
+
+pre_save.connect(pre_save_usuario, sender=Usuario)

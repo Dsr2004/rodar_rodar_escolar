@@ -4,9 +4,8 @@ from datetime import datetime, timedelta
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import login, logout, authenticate  #es para autenticar, iniciar y cerrar la sesión
-from django.contrib.auth.decorators import login_required
 from django.conf import settings
-
+from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 
 from .forms import LoginForm, UsuarioForm
@@ -80,8 +79,6 @@ def Locali_placa(Placa):
     latitud = df[pos:pos + 1]['latitud'].reset_index(drop=True)[0]
     return longitud, latitud
 
-
-@login_required()
 def index(request):
     usuario = request.user
     hijos = usuario.hijos.all()
@@ -117,10 +114,8 @@ def Login(request):
     context['form'] = LoginForm
     return render(request, "login.html", context)
 
-
 def logout(request):
     logout(request)
-
 
 def BuscarRuta(request, placa, posicion):
     print(placa)
@@ -196,7 +191,7 @@ def BuscarRuta(request, placa, posicion):
         lat_f= lat_f,
         long_f=long_f,
         )
-
+    print(type(lat_a))
     context = {
     "google_api_key": settings.API_KEY,
     "lat_a": lat_a,
@@ -219,6 +214,7 @@ def BuscarRuta(request, placa, posicion):
     }
    
     return render(request, "mapa.html", context)
+
 
 def RecargarRuta(request):
     if request.method == "POST":
@@ -315,6 +311,7 @@ def RecargarRuta(request):
     
         return JsonResponse(context)
 
+#GESTION DE USUARIOS
 class Usuarios(ListView):
     model = Usuario
     template_name = "usuarios.html"
@@ -329,7 +326,23 @@ class Usuarios(ListView):
 class CrearUsuario(CreateView):
     model = Usuario
     form_class = UsuarioForm
-    
+    template_name = "Usuarios/crear.html"
+    success_url = reverse_lazy("listarUsuarios")
+
+    def form_invalid(self, form):
+       return JsonResponse({"errores": form.errors}, status=400)
+
+class VerUsuario(DetailView):
+    model = Usuario
+    template_name = "Usuarios/ver.html"
+    context_object_name = "usuario"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['hijos'] = Hijo.objects.filter(usuario=self.object)
+        return context
+
+
 def estadoUsuarios(request):
     if request.method == "POST":
         usuario = Usuario.objects.get(pk=request.POST.get('pk'))
