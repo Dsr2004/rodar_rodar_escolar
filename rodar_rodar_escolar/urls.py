@@ -30,7 +30,7 @@ urlpatterns = [
     path("", login_required(index), name="index"),
     path("login/", Login, name="login"),
     path("logout/", LogoutView.as_view(),{'next_page': settings.LOGOUT_REDIRECT_URL}, name="logout"),
-    path("buscarRuta/<str:placa>/<int:posicion>", BuscarRuta, name="buscarRuta"),
+    path("buscarRuta/<str:placa>/<int:posicion>", login_required(BuscarRuta), name="buscarRuta"),
     path("pathReload/", RecargarRuta, name="recargarRuta"),
     path('Admin/', include('Usuarios.urls')),
 

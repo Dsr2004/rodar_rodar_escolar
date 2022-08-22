@@ -6,17 +6,24 @@
 {% endblock extendHead %}
 
 {% block contenido %}
-<div id="placa">
-placa: {{placa}}
-</div>
-<br>
-<div id="duracion">
-duración: {{directions.duration}}
-</div>
-<br>
-<div id="distancia">
-distancia: {{directions.distance}}
-</div>
+<h2>Está viendo la ruta de: <small>{{hijo}}</small></h2>
+<ul class="list-group w-50">
+  <li class="list-group-item">
+    <div id="placa">
+      <strong>Placa:</strong> {{placa}}
+      </div>
+  </li>
+  <li class="list-group-item">
+    <div id="duracion">
+      <strong>Duración:</strong> {{directions.duration}}
+      </div>
+  </li>
+  <li class="list-group-item">
+    <div id="distancia">
+      <strong>Distancia:</strong> {{directions.distance}}
+      </div>
+  </li>
+</ul>
 <script>
 document.getElementById("duracion").innerHTML = document.getElementById("duracion").innerHTML.replace("minutes","minutos").replace("and","y").replace("seconds","segundos");</script>
 <div class="div-container">

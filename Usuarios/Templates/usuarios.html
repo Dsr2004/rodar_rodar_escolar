@@ -41,12 +41,12 @@
             <td>{{usuario.telefono}}</td>
             <td>{{usuario.email}}</td>
             <td><a type="button" class="btn btn btn-outline-info btn-sm" onclick="ver_usuario_modal('{%url 'verUsuario' usuario.pk%}')"><i class="fa-solid fa-eye"></i></a></td>
-            <td><a type="button" class="btn btn btn-outline-warning btn-sm"><i class="fa-solid fa-pencil"></i></a></td>
+            <td><a type="button" class="btn btn btn-outline-warning btn-sm" onclick="editar_usuario_modal('{%url 'editarUsuario' usuario.pk%}')"><i class="fa-solid fa-pencil"></i></a></td>
             <td>
                 <div class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" role="switch" {% if usuario.estado  %}
                   checked
-                {% endif %}>
+                {% endif %} onclick="cambiar_estado_usuario('{%url 'estadoUsuario'%}', '{{usuario.pk}}')">
               </div></td>
         </tr>
         {% endfor %}
@@ -59,6 +59,8 @@
 <div class="modal fade" id="CraerUsuarioModal" role="dialog" >
 </div>
 <div class="modal fade" id="VerUsuarioModal" role="dialog" >
+</div>
+<div class="modal fade" id="EditarUsuarioModal" role="dialog" >
 </div>
 {% endblock contenido %}
 
