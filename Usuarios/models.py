@@ -11,12 +11,19 @@ from  django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core.validators import MinLengthValidator
 from django.db.models.signals import pre_save
 
+class Carros(models.Model):
+    placa = models.CharField(primary_key=True,max_length=10, unique=True)
+    nombre_conductor = models.CharField("Nombre del conductor",max_length=150, null=False, blank=False)
+    Marca = models.CharField(max_length=50,null=False, blank=False)
+    color = models.CharField(max_length=20,null=False, blank=False)
+    telefono_conductor = models.CharField("Teléfono del conductor",max_length=10,null=False, blank=False, unique=True)
+    
 class Hijo(models.Model):
     nombres  =models.CharField("Nombre del hijo", blank=False, null=False, max_length=15)
     apellidos = models.CharField("Apellido del hijo", blank=False, null=False, max_length=25)
     latitud = models.FloatField("latitud donde vive",blank=False, null=False) #validacion de minimo 5 caracteres despues del punto
     longitud = models.FloatField("longitud donde vive",blank=False, null=False) 
-    placa = models.CharField("Placa del carro", blank=False, null=False, max_length=6, validators=[MinLengthValidator(6)])
+    placa = models.ForeignKey(Carros, on_delete=models.SET_NULL, null=True, blank=False)
     posicion = models.IntegerField("Posicion del hijo")
     estado = models.BooleanField("Estado del viaje", default=True)
     class Meta:
