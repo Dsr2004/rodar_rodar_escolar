@@ -1,21 +1,18 @@
-from multiprocessing import get_context
 import pandas as pd
 import mygeotab 
 from datetime import datetime, timedelta
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import login, logout, authenticate  #es para autenticar, iniciar y cerrar la sesión
-from django.contrib.auth.forms import AuthenticationForm #formulario de inicio de sesion ya incluye usuario y password
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
-from django.views.generic import ListView
+from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 
-from .forms import LoginForm
+from .forms import LoginForm, UsuarioForm
 from .models import Hijo, Usuario
 from .mixins import Directions, if_admin
 import os
-import json
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -144,8 +141,6 @@ def BuscarRuta(request, placa, posicion):
     df['Lon'] = Lon
     df['Pos'] = Pos
 
-    
-
     #"---------------------------------"
     # long_a, lat_a= Locali_placa(placa)#inicio
 
@@ -220,10 +215,105 @@ def BuscarRuta(request, placa, posicion):
     "destination": f'{lat_b}, {long_b}',
     "directions": directions,
     "placa": placa,
+    "posicion":posicion,
     }
    
     return render(request, "mapa.html", context)
 
+def RecargarRuta(request):
+    if request.method == "POST":
+        placa = request.POST.get('placa')
+        posicion = request.POST.get('posicion')
+        hijos=Hijo.objects.filter(placa=placa).filter(posicion__lte=posicion)
+        print("hijos")
+        for hijo in hijos:
+            print(hijo.nombres)
+        Lat=[]
+        Lon=[]
+        Pos=[]
+        df = pd.DataFrame()
+        for hijo in hijos:
+            Lat.append(hijo.latitud)
+            Lon.append(hijo.longitud)
+            Pos.append(hijo.posicion)
+        df['Lat'] = Lat
+        df['Lon'] = Lon
+        df['Pos'] = Pos
+
+        "---------------------------------"
+        long_a, lat_a= Locali_placa(placa)#inicio
+
+        df = df.append({"Lat":lat_a, "Lon":long_a, "Pos": 0}, ignore_index=True)
+
+        df.sort_values(by=['Pos'], inplace=True)
+        df.reset_index(drop=True, inplace=True)
+        print("Dataframe")
+        print(df)
+
+        while len(df) != 6:
+            df.loc[len(df)] = [df['Lat'][len(df) - 1],
+                            df['Lon'][len(df) - 1], df['Pos'][len(df) - 1]+1]
+        print(df)
+
+        #el b es el ultimo de todos los puntos
+        lat_b = df.Lat[5]
+        long_b = df.Lon[5]
+
+        #estos son los waipoints
+        lat_c = df.Lat[1]
+        long_c = df.Lon[1]
+        lat_d = df.Lat[2]
+        long_d = df.Lon[2]
+        lat_e = df.Lat[3]
+        long_e = df.Lon[3]
+        lat_f = df.Lat[4]
+        long_f = df.Lon[4]
+
+        dif_lat = abs(lat_a - lat_f)
+        dif_log = abs(long_a - long_f)
+
+        # funcion que cambia el estado de la posicion de un hijo
+        if dif_lat < 0.0005 and dif_log < 0.0005:
+            Hijo.objects.filter(placa=placa).filter(posicion=posicion).update(estado=False)
+            
+
+        if lat_a and lat_b and lat_c and lat_d:
+            directions = Directions(
+            lat_a= lat_a,
+            long_a=long_a,
+            lat_b = lat_b,
+            long_b=long_b,
+            lat_c= lat_c,
+            long_c=long_c,
+            lat_d = lat_d,
+            long_d=long_d,
+            lat_e= lat_e,
+            long_e=long_e,
+            lat_f= lat_f,
+            long_f=long_f,
+            )
+
+        context = {
+        "google_api_key": settings.API_KEY,
+        "lat_a": lat_a,
+        "long_a": long_a,
+        "lat_b": lat_b,
+        "long_b": long_b,
+        "lat_c": lat_c,
+        "long_c": long_c,
+        "lat_d": lat_d,
+        "long_d": long_d,
+        "lat_e": lat_e,
+        "long_e": long_e,
+        "lat_f": lat_f,
+        "long_f": long_f,
+        "origin": f'{lat_a}, {long_a}',
+        "destination": f'{lat_b}, {long_b}',
+        "directions": directions,
+        "placa": placa,
+        }
+    
+        return JsonResponse(context)
 
 class Usuarios(ListView):
     model = Usuario
@@ -233,8 +323,12 @@ class Usuarios(ListView):
         Admin = if_admin(request)
         if Admin == False:
             return redirect("index")
-        context = {"usuarios":self.model.objects.filter(administrador=0).exclude(pk = request.user.pk)}
+        context = {"usuarios":self.model.objects.filter(administrador=False).exclude(pk = request.user.pk)}
         return render(request, self.template_name,context)
+
+class CrearUsuario(CreateView):
+    model = Usuario
+    form_class = UsuarioForm
     
 def estadoUsuarios(request):
     if request.method == "POST":

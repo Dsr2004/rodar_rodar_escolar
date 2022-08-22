@@ -1,8 +1,7 @@
-from django.conf import settings
 import requests
-import json
-import datetime
+from django.conf import settings
 from humanfriendly import format_timespan
+from django.shortcuts import redirect
 '''
 Handles directions from Google
 '''
@@ -73,3 +72,6 @@ def if_admin(request):
         return True
     else:
         return False
+
+  
+           

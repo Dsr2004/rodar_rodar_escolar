@@ -5,6 +5,7 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=" + google_api_key + "&
 
 
 function initMap() {
+  console.log({lat: lat_a, lng: long_a})
     var directionsService = new google.maps.DirectionsService;
     var directionsDisplay = new google.maps.DirectionsRenderer;
     document.getElementById('map-route').style.height = '400px';
@@ -14,7 +15,6 @@ function initMap() {
     });
     directionsDisplay.setMap(map);
     calculateAndDisplayRoute(directionsService, directionsDisplay);
-
 }
 
 const waypts = [
@@ -44,4 +44,43 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
     });
 }
 
-
+function reload(){
+setTimeout(()=>{
+  $.ajax({
+    data: {
+        'placa': placa,
+        "posicion":posicion,
+        "csrfmiddlewaretoken": csrf_token,
+    },
+    url: url,
+    type: method,
+    success: function(data) {
+      google_api_key = JSON.stringify(data['google_api_key'])
+      lat_a = parseFloat(JSON.stringify(data['lat_a']));
+      long_a = parseFloat(JSON.stringify(data['long_a']));
+      lat_b = parseFloat(JSON.stringify(data['lat_b']));
+      long_b = parseFloat(JSON.stringify(data['long_b']));
+      lat_c = parseFloat(JSON.stringify(data['lat_c']));
+      long_c = parseFloat(JSON.stringify(data['long_c']));
+      lat_d = parseFloat(JSON.stringify(data['lat_d']));
+      long_d = parseFloat(JSON.stringify(data['long_d']));
+      lat_e = parseFloat(JSON.stringify(data['lat_e']));
+      long_e = parseFloat(JSON.stringify(data['long_e']));
+      lat_f = parseFloat(JSON.stringify(data['lat_f']));
+      long_f = parseFloat(JSON.stringify(data['long_f']));
+      origin = JSON.stringify(data['origin']);
+      destination = JSON.stringify(data['destination'])
+      directions = JSON.stringify(data['directions'])
+      document.getElementById('duracion').innerHTML = "duracion: "+JSON.stringify(data['directions']['duration']).replace(/['"]+/g, '').replace("minutes","minutos").replace("and","y").replace("seconds","segundos");
+      document.getElementById('distancia').innerHTML = "distance: "+JSON.stringify(data['directions']['distance']).replace(/['"]+/g, '');
+      initMap();
+      reload(); 
+    },
+    error: function(error) {
+      Error = error['responseJSON']
+      console.log(Error)
+    }
+  });
+},5000);
+}
+reload();
