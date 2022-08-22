@@ -16,7 +16,7 @@
 .requerido{
     color: red !important;
 }
-.buttonSweetalert{
+weetalert{
     margin-left: 20px !important;
 }
 /* Estilos del mapa */
@@ -29,26 +29,32 @@
     font-weight: 700;
 }
 .mapActions{
+ width: 100%;
  position: relative;
  float: right;
  right: 0;
 }
-.mapActions .buttons .textMap{
+.mapActions button{
+    position: relative;
+    float: right;
+    right: 0;
+}
+.mapActions .textMap{
     display: none;
 }
-.mapActions .buttons #togleMapPlay:hover .textMap,
-.mapActions .buttons #togleMapStop:hover .textMap{
+.mapActions #togleMapPlay:hover .textMap,
+.mapActions #togleMapStop:hover .textMap{
     display: block;
 }
-.mapActions .buttons #togleMapPlay .flexo,
-.mapActions .buttons #togleMapStop .flexo{
+.mapActions #togleMapPlay .flexo,
+.mapActions #togleMapStop .flexo{
     display: flex;
     flex-wrap: wrap;
     font-size: 17px;
     padding: 3px;
 }
-.mapActions .buttons #togleMapPlay .flexo div,
-.mapActions .buttons #togleMapStop .flexo div{
+.mapActions #togleMapPlay .flexo div,
+.mapActions #togleMapStop .flexo div{
     margin-left: 5px;
     margin-top: -4px;
 }

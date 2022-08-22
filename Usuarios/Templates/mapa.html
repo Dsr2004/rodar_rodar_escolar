@@ -8,7 +8,7 @@
 {% block contenido %}
 <h2>Está viendo la ruta de: <small>{{hijo.get_nombreCompleto}}</small></h2>
 <div class="information">
-  <table class="table table-borderless">
+  <table class="table table-bordered">
     <thead>
       <tr>
         <td>
@@ -29,10 +29,8 @@
         <td id="distancia">{{directions.distance}}</td>
         <td id="duracion">{{directions.duration}}</td>
         <td class="mapActions">
-          <div class="buttons">
-            <button id="togleMapPlay" type="button" class="btn btn-outline-info btn-sm" onclick="play()"><div class="flexo"><i class="fa-solid fa-play"></i> <div class="textMap">Reanudar</div></div> </button><!--play -->
-            <button id="togleMapStop" type="button" class="btn btn-outline-warning btn-sm" onclick="stop()"><div class="flexo"><i class="fa-solid fa-stop"></i> <div class="textMap">Parar</div></div> </button><!--stop -->
-          </div>
+          <button id="togleMapPlay" type="button" class="btn btn-outline-info btn-sm" onclick="play()"><div class="flexo"><i class="fa-solid fa-play"></i> <div class="textMap">Reanudar</div></div> </button><!--play -->
+          <button id="togleMapStop" type="button" class="btn btn-outline-warning btn-sm" onclick="stop()"><div class="flexo"><i class="fa-solid fa-stop"></i> <div class="textMap">Parar</div></div> </button><!--stop -->
         </td>
       </tr>
     </tbody>
