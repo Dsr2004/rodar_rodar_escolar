@@ -16,6 +16,14 @@ class UsuarioForm(forms.ModelForm):
     class Meta:
         model = Usuario
         fields = ['usuario','nombres','apellidos','telefono','email', 'estado']
+        widgets = {
+            'usuario': forms.TextInput(attrs={'class': 'form-control', "autocomplete": "off"}),
+            'nombres': forms.TextInput(attrs={'class': 'form-control', "autocomplete": "off"}),
+            'apellidos': forms.TextInput(attrs={'class': 'form-control', "autocomplete": "off"}),
+            'telefono': forms.TextInput(attrs={'class': 'form-control', "autocomplete": "off"}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', "autocomplete": "off"}),
+
+        }
 
     def clean_password2(self):
         password = self.cleaned_data.get('password')

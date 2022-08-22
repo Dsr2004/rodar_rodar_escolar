@@ -10,14 +10,14 @@
         <h1>Administración de Usuarios</h1>
     </div>
     <div class="col-2">
-        <a href="" class="btn btn-dark"><i class="fa-solid fa-user-plus"></i></a>
+        <a type="button" class="btn btn-dark" onclick="crear_usuario_modal('{%url 'crearUsuario'%}')"><i class="fa-solid fa-user-plus"></i></a>
     </div>
 </div>
 
 <hr>
 {% if usuarios %}
 
-<table id="UsersTable"  class="display nowrap" cellspacing="0" width="100%">
+<table id="UsuariosTable"  class="display nowrap" cellspacing="0" width="100%">
     <thead>
         <tr>
             <th colspan="4">Datos</th>
@@ -40,8 +40,8 @@
             <td>{{usuario.get_nombreCompleto}}</td>
             <td>{{usuario.telefono}}</td>
             <td>{{usuario.email}}</td>
-            <td><a href=""><i class="fa-solid fa-eye"></i></a></td>
-            <td><a href=""><i class="fa-solid fa-pencil"></i></a></td>
+            <td><a type="button" class="btn btn btn-outline-info btn-sm" onclick="ver_usuario_modal('{%url 'verUsuario' usuario.pk%}')"><i class="fa-solid fa-eye"></i></a></td>
+            <td><a type="button" class="btn btn btn-outline-warning btn-sm"><i class="fa-solid fa-pencil"></i></a></td>
             <td>
                 <div class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" role="switch" {% if usuario.estado  %}
@@ -56,13 +56,18 @@
 {% else %}
 <h1>No hay usuarios que mostrar, registre uno primero</h1>
 {% endif %}
-     
+<div class="modal fade" id="CraerUsuarioModal" role="dialog" >
+</div>
+<div class="modal fade" id="VerUsuarioModal" role="dialog" >
+</div>
 {% endblock contenido %}
 
 {% block extendScript %}
+
+<script src="{% static 'libs/sweetalert/sweetalert.js' %}"></script>
 <script>
      $(document).ready(function () {
-      $('#UsersTable').DataTable({
+      $('#UsuariosTable').DataTable({
             "language": {
                "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
            },

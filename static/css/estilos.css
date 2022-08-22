@@ -13,3 +13,6 @@
     position: relative;
     margin-top: 30vh;
 }
+.requerido{
+    color: red !important;
+}

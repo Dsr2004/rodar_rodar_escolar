@@ -32,13 +32,13 @@
           <ul class="nav nav-pills flex-column">
             <li class="nav-item">
               <a class="nav-link 
-              {% if request.path == '/'%}active{% endif %} 
+              {% if request.path == '/'  or 'buscarRuta' in request.path%}active{% endif %} 
               " aria-current="page" href="{% url 'index' %}">Inicio</a>
             </li>
             {%if request.user.administrador%}
             <li class="nav-item">
               <a class="nav-link 
-              {% if request.path == '/Admin/ListarUsuarios'%}active{% endif %} 
+              {% if request.path == '/Admin/ListarUsuarios/'%}active{% endif %} 
               " href="{% url 'listarUsuarios' %}">Administración de Usuarios</a>
             </li>
             <li class="nav-item">

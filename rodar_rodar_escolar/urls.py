@@ -18,6 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth.views import LogoutView
+from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.conf.urls.static import static
 from Usuarios.views import Login, index, BuscarRuta
@@ -26,7 +27,7 @@ from Usuarios.views import Login, index, BuscarRuta
 #poner login required
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", index, name="index"),
+    path("", login_required(index), name="index"),
     path("login/", Login, name="login"),
     path("logout/", LogoutView.as_view(),{'next_page': settings.LOGOUT_REDIRECT_URL}, name="logout"),
     path("buscarRuta/<str:placa>/<int:posicion>", BuscarRuta, name="buscarRuta"),
