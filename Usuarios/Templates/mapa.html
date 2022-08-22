@@ -2,17 +2,23 @@
 {% load static %}
 {% block titulo %}Mapa{% endblock titulo %}
 {% block extendHead %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 {% endblock extendHead %}
 
 {% block contenido %}
+<div id="placa">
 placa: {{placa}}
+</div>
 <br>
+<div id="duracion">
 duración: {{directions.duration}}
+</div>
 <br>
+<div id="distancia">
 distancia: {{directions.distance}}
-
-
+</div>
+<script>
+document.getElementById("duracion").innerHTML = document.getElementById("duracion").innerHTML.replace("minutes","minutos").replace("and","y").replace("seconds","segundos");</script>
 <div class="div-container">
     <div class="map-container">
         <div id="map-route"></div>
@@ -20,27 +26,39 @@ distancia: {{directions.distance}}
   </div>
   <hr>
 <div id="map_canvas"></div>
+<form id="pathReload" action="{%url 'recargarRuta'%}" method="post">
+
+  {% csrf_token %}
+</form>
 {% endblock contenido %}
 
 {% block extendScript %}
+<script>
 
+</script>
 <script type="text/javascript">
+var posicion = "{{posicion|safe}}";
+var placa = "{{placa|safe}}";
+var url = $("#pathReload").attr('action');
+var csrf_token = $("#pathReload").find('input[name=csrfmiddlewaretoken]').val();
+var method = $("#pathReload").attr('method');
+//----------------------------------------------------------------
 var google_api_key = "{{google_api_key|safe}}";
-var lat_a = {{lat_a|safe}};
-var long_a = {{long_a|safe}};
-var lat_b = {{lat_b|safe}};
-var long_b = {{long_b|safe}};
-var lat_c = {{lat_c|safe}};
-var long_c = {{long_c|safe}};
-var lat_d = {{lat_d|safe}};
-var long_d = {{long_d|safe}};
-var lat_e = {{lat_e|safe}};
-var long_e = {{long_e|safe}};
-var lat_f = {{lat_f|safe}};
-var long_f = {{long_f|safe}};
+var lat_a = parseFloat("{{lat_a|safe}}");
+var long_a = parseFloat("{{long_a|safe}}");
+var lat_b = parseFloat("{{lat_b|safe}}");
+var long_b = parseFloat("{{long_b|safe}}");
+var lat_c = parseFloat("{{lat_c|safe}}");
+var long_c = parseFloat("{{long_c|safe}}");
+var lat_d = parseFloat("{{lat_d|safe}}");
+var long_d = parseFloat("{{long_d|safe}}");
+var lat_e = parseFloat("{{lat_e|safe}}");
+var long_e = parseFloat("{{long_e|safe}}");
+var lat_f = parseFloat("{{lat_f|safe}}");
+var long_f = parseFloat("{{long_f|safe}}");
 var origin = "{{origin|safe}}";
 var destination = "{{destination|safe}}";
-var directions = {{directions|safe}}
+var directions = {{directions|safe}};
 </script>
 
 <script src="{% static 'js/google_maps.js' %}"></script>

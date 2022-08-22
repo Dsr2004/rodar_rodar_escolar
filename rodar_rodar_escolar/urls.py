@@ -21,7 +21,7 @@ from django.contrib.auth.views import LogoutView
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.conf.urls.static import static
-from Usuarios.views import Login, index, BuscarRuta
+from Usuarios.views import Login, index, BuscarRuta, RecargarRuta
 
 
 #poner login required
@@ -31,6 +31,7 @@ urlpatterns = [
     path("login/", Login, name="login"),
     path("logout/", LogoutView.as_view(),{'next_page': settings.LOGOUT_REDIRECT_URL}, name="logout"),
     path("buscarRuta/<str:placa>/<int:posicion>", BuscarRuta, name="buscarRuta"),
+    path("pathReload/", RecargarRuta, name="recargarRuta"),
     path('Admin/', include('Usuarios.urls')),
 
 
