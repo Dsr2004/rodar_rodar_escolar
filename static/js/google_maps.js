@@ -5,7 +5,6 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=" + google_api_key + "&
 
 
 function initMap() {
-  console.log({lat: lat_a, lng: long_a})
     var directionsService = new google.maps.DirectionsService;
     var directionsDisplay = new google.maps.DirectionsRenderer;
     document.getElementById('map-route').style.height = '400px';
@@ -81,6 +80,7 @@ setTimeout(()=>{
     error: function(error) {
       Error = error['responseJSON']
       console.log(Error)
+      reload();
     }
   });
 },5000);
