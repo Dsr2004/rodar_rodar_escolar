@@ -121,10 +121,7 @@ def BuscarRuta(request, placa, posicion):
     print(placa)
     print(posicion)
     hijos=Hijo.objects.filter(placa=placa).filter(posicion__lte=posicion)
-    hijoBuscado = Hijo.objects.filter(placa=placa).filter(posicion=posicion)
-    print("hijos")
-    for hijo in hijos:
-        print(hijo.nombres)
+    hijoBuscado = Hijo.objects.get(placa=placa, posicion=posicion)
     Lat=[]
     Lon=[]
     Pos=[]
@@ -147,13 +144,10 @@ def BuscarRuta(request, placa, posicion):
 
     df.sort_values(by=['Pos'], inplace=True)
     df.reset_index(drop=True, inplace=True)
-    print("Dataframe")
-    print(df)
 
     while len(df) != 6:
         df.loc[len(df)] = [df['Lat'][len(df) - 1],
                            df['Lon'][len(df) - 1], df['Pos'][len(df) - 1]+1]
-    print(df)
 
     #el b es el ultimo de todos los puntos
     lat_b = df.Lat[5]
@@ -192,7 +186,6 @@ def BuscarRuta(request, placa, posicion):
         lat_f= lat_f,
         long_f=long_f,
         )
-    print(type(lat_a))
     context = {
     "google_api_key": settings.API_KEY,
     "lat_a": lat_a,
@@ -212,7 +205,7 @@ def BuscarRuta(request, placa, posicion):
     "directions": directions,
     "placa": placa,
     "posicion":posicion,
-    "hijo": list(hijoBuscado),
+    "hijo": hijoBuscado,
     }
    
     return render(request, "mapa.html", context)
@@ -223,9 +216,6 @@ def RecargarRuta(request):
         placa = request.POST.get('placa')
         posicion = request.POST.get('posicion')
         hijos=Hijo.objects.filter(placa=placa).filter(posicion__lte=posicion)
-        print("hijos")
-        for hijo in hijos:
-            print(hijo.nombres)
         Lat=[]
         Lon=[]
         Pos=[]
@@ -247,13 +237,10 @@ def RecargarRuta(request):
 
         df.sort_values(by=['Pos'], inplace=True)
         df.reset_index(drop=True, inplace=True)
-        print("Dataframe")
-        print(df)
 
         while len(df) != 6:
             df.loc[len(df)] = [df['Lat'][len(df) - 1],
                             df['Lon'][len(df) - 1], df['Pos'][len(df) - 1]+1]
-        print(df)
 
         #el b es el ultimo de todos los puntos
         lat_b = df.Lat[5]
