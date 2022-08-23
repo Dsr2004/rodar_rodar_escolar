@@ -156,3 +156,68 @@ const swalWithBootstrapButtons = Swal.mixin({
 
 
 }
+// GESTION DE CARROS
+
+function crear_carros_modal(url){
+  $("#CrearCarroModal").load(url, function (){ 
+    $(this).appendTo("body").modal('show');
+  });
+}
+
+function editar_carro_modal(url){
+  $("#EditarCarroModal").load(url, function (){ 
+    $(this).appendTo("body").modal('show');
+  });
+}
+
+function cambiar_estado_carro(url, placa){
+  const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger'
+      },
+      buttonsStyling: false
+    })
+    
+    swalWithBootstrapButtons.fire({
+      title: '¿Estás seguro?',
+      text: "Cambiará el estado del carro",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Si, cambiar!',
+      cancelButtonText: 'No, cancelar!',
+      confirmButtonClass: "buttonSweetalert",
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+          $.ajax({
+              url: url,
+              type: 'POST',
+              data: {"csrfmiddlewaretoken": csrftoken,"placa": placa},
+              success: function(data){
+                  swalWithBootstrapButtons.fire(
+                      'Modificado!',
+                      'El estado del carro ha sido modificado.',
+                      'success'
+                    ).then(function(){
+                      location.reload();
+                    })
+                   
+              }
+            });
+           
+      } else if (
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire(
+          'Canecelado',
+          'No se han aplicado cambios al carro :)',
+          'error'
+        ).then(function(){
+          location.reload();
+        })
+      }
+    })
+  
+  
+  }

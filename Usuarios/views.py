@@ -8,8 +8,8 @@ from django.conf import settings
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 
-from .forms import HijoForm, LoginForm, UsuarioForm
-from .models import Hijo, Usuario
+from .forms import HijoForm, LoginForm, UsuarioForm, CarroForm
+from .models import Hijo, Usuario, Carro
 from .mixins import Directions, if_admin
 import os
 from dotenv import load_dotenv
@@ -415,3 +415,43 @@ def EstadoEstudiante(request):
             estudiante.save()
             return JsonResponse({"success":"Se ha habilitado el estudiante correctamente"},status=200)
 
+# Gestión Carros
+class Carros(ListView):
+    model = Carro
+    template_name = "carros.html"
+    
+    def get(self, request, *args, **kwargs):
+        Admin = if_admin(request)
+        if Admin == False:
+            return redirect("index")
+        context = {"carros":self.model.objects.all()}
+        return render(request, self.template_name,context)
+
+class CrearCarro(CreateView):
+    model = Carro
+    form_class = CarroForm
+    template_name = "Carros/crear.html"
+    success_url = reverse_lazy("listarCarros")
+
+    def form_invalid(self, form):
+        print(form.errors)
+        return JsonResponse({"errores": form.errors}, status=400)
+    
+class EditarCarro(UpdateView):
+    model = Carro
+    form_class = CarroForm
+    template_name = "Carros/editar.html"
+    success_url = reverse_lazy("listarCarros")
+
+def EstadoCarro(request):
+    if request.method == "POST":
+        carro = Carro.objects.get(placa=request.POST.get('placa'))
+        if carro.estado:
+            carro.estado = False
+            carro.save()
+            return JsonResponse({"succes":"Se ha inhabilitado el carro correctamente"}, status=200)    
+        
+        else:
+            carro.estado = True
+            carro.save()
+            return JsonResponse({"success":"Se ha habilitado el carro correctamente"},status=200)

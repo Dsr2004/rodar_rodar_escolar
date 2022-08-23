@@ -1,0 +1,51 @@
+<div class="modal-dialog  modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ver Detalles del carro {{carro.placa|title}}</strong></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+            <div class="col-md-6">
+                <Label><strong>Placa: </strong></Label>
+                <h5><small>{{carro.placa}}</small></h5>
+            </div>
+            <br>
+            <div class="col-md-6">
+                <Label><strong>Nombre del conductor: </strong></Label>
+                <h5><small>{{carro.nombre_conductor}}</small></h5>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <h3><sub>Marca: </sub></h3>
+            <div class="col-6">
+                <Label><strong>Marca: </strong></Label>
+                <h5><small>{{carro.Marca}}</small></h5>
+            </div>
+            <div class="col-6">
+                <Label><strong>Color: </strong></Label>
+                <h5><small>{{carro.color}}</small></h5>
+            </div>
+        </div>
+        <hr>
+           <div class="row" >
+            <div class="col-6">
+                <Label><strong>Teléfono del conductor: </strong></Label>
+                <h5><small>{{carro.telefono_conductor}}</small></h5>
+            </div>
+            <div class="col-6">
+                <Label><strong>Estado: </strong></Label>
+                <h5><small>
+                    {% if carro.estado %}
+                    ACTIVO
+                    {% else %}
+                    INACTIVO
+                    {% endif %}    
+                </small></h5>
+            </div>
+            </div>
+            <hr>    
+    </div>
+</div>
+

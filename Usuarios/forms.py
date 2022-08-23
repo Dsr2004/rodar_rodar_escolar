@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import AuthenticationForm, UsernameField
 from django import forms
-from .models import Usuario, Hijo
+from .models import Carro, Usuario, Hijo
 
 class LoginForm(AuthenticationForm):
     username =  UsernameField(
@@ -45,5 +45,18 @@ class HijoForm(forms.ModelForm):
             'longitud': forms.NumberInput(attrs={'class': 'form-control', "autocomplete": "off"}),
             'placa': forms.TextInput(attrs={'class': 'form-control', "autocomplete": "off"}),
             'posicion': forms.NumberInput(attrs={'class': 'form-control', "autocomplete": "off"}),
+            'estado': forms.HiddenInput(attrs={'class': 'form-control', "autocomplete": "off"}),
+        }
+
+class CarroForm(forms.ModelForm):
+    class Meta:
+        model = Carro
+        fields = "__all__"
+        widgets = {
+            'placa': forms.TextInput(attrs={'class': 'form-control', "autocomplete": "off"}),
+            'nombre_conductor': forms.TextInput(attrs={'class': 'form-control', "autocomplete": "off"}),
+            'Marca': forms.TextInput(attrs={'class': 'form-control', "autocomplete": "off"}),
+            'color': forms.TextInput(attrs={'class': 'form-control', "autocomplete": "off"}),
+            'telefono_conductor': forms.TextInput(attrs={'class': 'form-control', "autocomplete": "off"}),
             'estado': forms.HiddenInput(attrs={'class': 'form-control', "autocomplete": "off"}),
         }
