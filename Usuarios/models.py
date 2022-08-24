@@ -1,10 +1,8 @@
-from pyexpat import model
 import random
 # ***********correo***********
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from statistics import mode
 from django.template.loader import render_to_string
 # ***********correo***********
 
@@ -26,7 +24,7 @@ class Carro(models.Model):
 
     def __str__(self):
         return self.placa
-    
+
 class Hijo(models.Model):
     nombres  =models.CharField("Nombre del hijo", blank=False, null=False, max_length=15)
     apellidos = models.CharField("Apellido del hijo", blank=False, null=False, max_length=25)
@@ -125,12 +123,7 @@ def pre_save_usuario(sender, instance, *args, **kwargs):
             password = "1234"
             instance.set_password(password)
 
+
 pre_save.connect(pre_save_usuario, sender=Usuario)
 
 
-# class carro(models.Model):
-#     nombre = models.CharField(max_length=120)
-#     placa = models.CharField(max_length=6)
-
-#     class Meta:
-#         db_table = "CarroPrueba"

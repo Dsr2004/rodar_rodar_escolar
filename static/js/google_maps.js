@@ -70,7 +70,6 @@ setTimeout(()=>{
       origin = JSON.stringify(data['origin']);
       destination = JSON.stringify(data['destination'])
       directions = JSON.stringify(data['directions'])
-
       document.getElementById('duracion').innerHTML = JSON.stringify(data['directions']['duration']).replace(/['"]+/g, '').replace("minutes","minutos").replace("and","y").replace("seconds","segundos");
       document.getElementById('distancia').innerHTML = JSON.stringify(data['directions']['distance']).replace(/['"]+/g, '');
       if (repeat == true) {
