@@ -1,0 +1,68 @@
+<div class="modal-dialog  modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Crear Carro</strong></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'crearCarro' %}" method="post" id="crearCarroForm">
+            {% csrf_token %}
+            <Label><strong>placa: <sup class="requerido">(*)</sup></strong></Label>
+            {{form.placa}}
+            <p id="placa" class="bg-light text-danger" style="color: #dc3545;"></p>
+            <br>
+            <Label><strong>Nombre del conductor: <sup class="requerido">(*)</sup></strong></Label>
+            {{form.nombre_conductor}}
+            <p id="nombre_conductor" class="bg-light text-danger" style="color: #dc3545;"></p>
+            <br>
+            <Label><strong>Marca: <sup class="requerido">(*)</sup></strong></Label>
+            {{form.Marca}}
+            <p id="Marca" class="bg-light text-danger" style="color: #dc3545;"></p>
+            <br>
+            <Label><strong>Color: <sup class="requerido">(*)</sup></strong></Label>
+            {{form.color}}
+            <p id="color" class="bg-light text-danger" style="color: #dc3545;"></p>
+            <br>
+            <Label><strong>Teléfono del conductor:<sup class="requerido">(*)</sup></strong></Label>
+            {{form.telefono_conductor}}
+            <p id="telefono_conductor" class="bg-light text-danger" style="color: #dc3545;"></p>
+            <br>
+            {{form.estado}}
+        </form>
+        <hr>
+        <button id="crearCarroBoton" class="btn btn-success w-100">Crear Carro</button>
+      </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#crearCarroBoton').click(function () {
+            var form = $('#crearCarroForm');
+            $.ajax({
+                url: form.attr('action'),
+                type: form.attr('method'),
+                data: form.serialize(),
+                success: function (data) {
+                    swal.fire({
+                            title: "Exito!",
+                            text: "Carro creado con exito!",
+                            icon: "success",
+                            button: "Aceptar",
+                        }).then(function() {
+                            location.reload();
+                        });
+                       
+                },error: function (data) {
+                    form.find('.text-danger').text('');
+                    form.find('.is-invalid').removeClass('is-invalid');
+                    errores = data.responseJSON.errores;
+                    for (let i in errores) {
+                        let x=form.find('input[name='+i+']')
+                        x.addClass("is-invalid")
+                        $("#"+i).text(errores[i])
+                    }
+                }
+            });
+        });
+    });
+</script>

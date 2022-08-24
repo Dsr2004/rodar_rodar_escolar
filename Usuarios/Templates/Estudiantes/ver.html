@@ -1,0 +1,53 @@
+<div class="modal-dialog  modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ver Detalles de {{estudiante.nombres|title}}</strong></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+            <h3><sub>Nombres y apellidos</sub></h3>
+            <div class="col-md-6">
+                <Label><strong>Nombres: </strong></Label>
+                <h5><small>{{estudiante.nombres}}</small></h5>
+            </div>
+            <br>
+            <div class="col-md-6">
+                <Label><strong>Apellidos: </strong></Label>
+                <h5><small>{{estudiante.apellidos}}</small></h5>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <h3><sub>Información de Ubicación</sub></h3>
+            <div class="col-6">
+                <Label><strong>Latitud: </strong></Label>
+                <h5><small>{{estudiante.latitud}}</small></h5>
+            </div>
+            <div class="col-6">
+                <Label><strong>Longitud: </strong></Label>
+                <h5><small>{{estudiante.longitud}}</small></h5>
+            </div>
+        </div>
+        <hr>
+           <div class="row" >
+            <h3><sub>Información del sistema</sub></h3>
+            <div class="col-6">
+                <Label><strong>Posicion: </strong></Label>
+                <h5><small>{{estudiante.posicion}}</small></h5>
+            </div>
+            <div class="col-6">
+                <Label><strong>Estado: </strong></Label>
+                <h5><small>
+                    {% if estudiante.estado %}
+                    ACTIVO
+                    {% else %}
+                    INACTIVO
+                    {% endif %}    
+                </small></h5>
+            </div>
+            </div>
+            <hr>    
+    </div>
+</div>
+

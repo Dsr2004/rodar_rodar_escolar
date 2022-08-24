@@ -1,0 +1,60 @@
+.CanvasMenu{
+    position: relative;
+}
+
+.btn-close-session{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    margin-bottom: 10px !important;
+}
+.homecenter{
+    position: relative;
+    margin-top: 30vh;
+}
+.requerido{
+    color: red !important;
+}
+.buttonSweetalert{
+    margin-left: 20px !important;
+}
+/* Estilos del mapa */
+.list-info{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.list-info strong{
+    font-weight: 700;
+}
+.mapActions{
+ width: 100%;
+ position: relative;
+ float: right;
+ right: 0;
+}
+.mapActions button{
+    position: relative;
+    float: right;
+    right: 0;
+}
+.mapActions .textMap{
+    display: none;
+}
+.mapActions #togleMapPlay:hover .textMap,
+.mapActions #togleMapStop:hover .textMap{
+    display: block;
+}
+.mapActions #togleMapPlay .flexo,
+.mapActions #togleMapStop .flexo{
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 17px;
+    padding: 3px;
+}
+.mapActions #togleMapPlay .flexo div,
+.mapActions #togleMapStop .flexo div{
+    margin-left: 5px;
+    margin-top: -4px;
+}

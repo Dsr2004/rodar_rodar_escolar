@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block titulo %}Inicio{% endblock titulo %}
+
+
+{% block contenido %}
+<hr>
+<h1>Hola {{request.user|title}}</h1>
+<hr>
+<br>
+<div class="list-group">
+    <li class="list-group-item list-group-item-action active" aria-current="true">
+      Siga la ruta de su{% if hijos|length > 1 %}s {% endif %}
+          hijo{% if hijos|length > 1 %}s {% endif %}
+    </li>
+
+    {% for hijo in hijos %}
+    
+        <a href="{% url 'buscarRuta' placa=hijo.placa posicion=hijo.posicion%}" class="list-group-item list-group-item-action">{{hijo.nombres}}</a>
+    {% endfor %}
+  </div>
+
+  <div class="DivMapa">
+
+  </div>
+
+{% endblock contenido %}
+
+
+{% block extendScript %}
+<script src="{% static 'js/google_maps.js' %}"></script>
+{% endblock extendScript %}
+    
+    

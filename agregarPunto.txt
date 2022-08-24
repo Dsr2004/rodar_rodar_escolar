@@ -1,0 +1,7 @@
+1- cambiar el while a un numero mayor
+2- cambiar el punto b al punto maximo
+3- arreglar los waipoints
+4- arreglar las diferencias
+5- mixin
+6- html
+7-javascript
