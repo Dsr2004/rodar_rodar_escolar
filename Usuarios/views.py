@@ -1,4 +1,6 @@
+from pyexpat import model
 import pandas as pd
+import json
 import mygeotab 
 from datetime import datetime, timedelta
 from django.shortcuts import render, redirect
@@ -6,9 +8,9 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import login, logout, authenticate  #es para autenticar, iniciar y cerrar la sesión
 from django.conf import settings
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
+from django.views.generic import  View, CreateView, ListView, UpdateView, DeleteView, DetailView, TemplateView
 
-from .forms import HijoForm, LoginForm, UsuarioForm, CarroForm
+from .forms import HijoForm, LoginForm, UsuarioForm, CarroForm, CambiarContrasena
 from .models import Hijo, Usuario, Carro
 from .mixins import Directions, if_admin
 import os
@@ -451,3 +453,57 @@ def EstadoCarro(request):
             carro.estado = True
             carro.save()
             return JsonResponse({"success":"Se ha habilitado el carro correctamente"},status=200)
+
+
+class Rutas(ListView):
+    model=Carro
+    template_name="rutas.html"
+    context_object_name = "carros"
+
+    def post(self, request, *args, **kwargs):
+        placa = request.POST.get("placa")
+        estudiantes = Hijo.objects.filter(placa=placa).order_by("posicion")
+        ctx={"estudiantes":estudiantes}
+        ctx["placa"]=placa
+        return render(request, "Rutas/rutaEstudiantes.html", ctx)
+
+class AgregarEstudianteRuta(View):
+    def get(self, request, *args, **kwargs):
+        placa = kwargs["placa"]
+        estudiantes = Hijo.objects.filter(placa=None).exclude(placa=placa)
+        ctx={"estudiantes":estudiantes, "placa":placa}
+        return render(request, "Rutas/agregarEstudiante.html", ctx)
+
+    def post(self, request, *args, **kwargs):
+        pass
+    
+class CambiarContrasena(TemplateView):
+    model = Usuario
+    form_class = CambiarContrasena
+    template_name="Usuarios/CambiarContrasena.html" 
+    
+    def get(self, request, *args, **kwargs):
+        contexto={"form":self.form_class}
+        return render(request, self.template_name, contexto)
+    def post(self, request, *args, **kwargs):
+        password = request.POST.get('contraseña')
+        password2 = request.POST.get('contraseñaC')
+        passwordA = request.POST.get('contraseñaA')
+        if password == password2:
+            if password != passwordA:
+                username= request.user.usuario
+                user = authenticate(username=username, password=passwordA)
+                if user is not None:
+                    user.set_password(password)
+                    user.save()
+                    return JsonResponse({"success":"Succes"})
+                else:
+                    data = json.dumps({'error': 'La contraseña antigua no es correcta'})
+                    return HttpResponse(data, content_type="application/json", status=400)
+            else:
+                data = json.dumps({'error': 'La nueva contraseña no puede ser igual a la antigua'})
+                return HttpResponse(data, content_type="application/json", status=400)
+        else:
+            data = json.dumps({'error': 'Las contraseñas no coinciden'})
+            return HttpResponse(data, content_type="application/json", status=400)
+        

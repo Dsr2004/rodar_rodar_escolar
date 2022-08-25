@@ -22,7 +22,11 @@ $("#CraerUsuarioModal").load(url, function (){
   $(this).appendTo("body").modal('show');
 });
 }
-
+function changePass(url){
+  $("#CambiarContrasena").load(url, function (){ 
+    $(this).appendTo("body").modal('show');
+  });
+  }
 function ver_usuario_modal(url){
   $("#VerUsuarioModal").load(url, function (){ 
     $(this).appendTo("body").modal('show');
@@ -221,3 +225,15 @@ function cambiar_estado_carro(url, placa){
   
   
   }
+
+  // GESTION DE RUTAS
+
+function BuscarRuta(placa){
+  $("#"+placa).submit()
+}
+
+function AgregarEstudianteRuta(url){
+  $("#AgregarEstudianteRutaModal").load(url, function (){ 
+    $(this).appendTo("body").modal('show');
+  });
+}
