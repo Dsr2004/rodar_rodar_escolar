@@ -43,6 +43,7 @@ class HijoForm(forms.ModelForm):
             'apellidos': forms.TextInput(attrs={'class': 'form-control', "autocomplete": "off"}),
             'latitud': forms.NumberInput(attrs={'class': 'form-control', "autocomplete": "off"}),
             'longitud': forms.NumberInput(attrs={'class': 'form-control', "autocomplete": "off"}),
+            'placa': forms.Select(attrs={'class': 'form-control', "autocomplete": "off"}),
             'placa': forms.TextInput(attrs={'class': 'form-control', "autocomplete": "off"}),
             'posicion': forms.NumberInput(attrs={'class': 'form-control', "autocomplete": "off"}),
             'estado': forms.HiddenInput(attrs={'class': 'form-control', "autocomplete": "off"}),
@@ -59,4 +60,7 @@ class CarroForm(forms.ModelForm):
             'color': forms.TextInput(attrs={'class': 'form-control', "autocomplete": "off"}),
             'telefono_conductor': forms.TextInput(attrs={'class': 'form-control', "autocomplete": "off"}),
             'estado': forms.HiddenInput(attrs={'class': 'form-control', "autocomplete": "off"}),
+
         }
+
+

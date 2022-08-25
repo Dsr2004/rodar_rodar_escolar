@@ -21,7 +21,10 @@ class Carro(models.Model):
     
     class Meta:
         db_table = "carros"
-    
+
+    def __str__(self):
+        return self.placa
+
 class Hijo(models.Model):
     nombres  =models.CharField("Nombre del hijo", blank=False, null=False, max_length=15)
     apellidos = models.CharField("Apellido del hijo", blank=False, null=False, max_length=25)
@@ -120,4 +123,7 @@ def pre_save_usuario(sender, instance, *args, **kwargs):
             password = "1234"
             instance.set_password(password)
 
+
 pre_save.connect(pre_save_usuario, sender=Usuario)
+
+

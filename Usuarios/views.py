@@ -344,10 +344,6 @@ class EditarUsuario(UpdateView):
         post = request.POST.copy()
         post["usuario"] = self.get_object().usuario
         form = self.form_class(post, instance=self.get_object())
-        print()
-        print(self.get_object().usuario)
-        form.fields["usuario"].initial = self.get_object().usuario
-        # form["usuario"]=self.get_object().usuario
         if form.is_valid():
             form.save()
             return redirect(self.success_url)
