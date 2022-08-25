@@ -35,6 +35,7 @@ class UsuarioForm(forms.ModelForm):
     #     return password2
 
 class HijoForm(forms.ModelForm):
+    placa = ""
     class Meta:
         model = Hijo
         fields = "__all__"
@@ -44,11 +45,17 @@ class HijoForm(forms.ModelForm):
             'latitud': forms.NumberInput(attrs={'class': 'form-control', "autocomplete": "off"}),
             'longitud': forms.NumberInput(attrs={'class': 'form-control', "autocomplete": "off"}),
             'placa': forms.Select(attrs={'class': 'form-control', "autocomplete": "off"}),
-            'placa': forms.TextInput(attrs={'class': 'form-control', "autocomplete": "off"}),
             'posicion': forms.NumberInput(attrs={'class': 'form-control', "autocomplete": "off"}),
             'estado': forms.HiddenInput(attrs={'class': 'form-control', "autocomplete": "off"}),
         }
-
+    def clean_placa(self):
+        self.placa = self.cleaned_data.get("placa")
+        return self.placa
+    
+    def clean_posicion(self):
+        posicion = self.cleaned_data.get("posicion")
+        return posicion
+        
 class CarroForm(forms.ModelForm):
     class Meta:
         model = Carro

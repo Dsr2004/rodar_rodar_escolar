@@ -1,3 +1,4 @@
+from pyexpat import model
 import pandas as pd
 import mygeotab 
 from datetime import datetime, timedelta
@@ -6,7 +7,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import login, logout, authenticate  #es para autenticar, iniciar y cerrar la sesión
 from django.conf import settings
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
+from django.views.generic import  View, CreateView, ListView, UpdateView, DeleteView, DetailView
 
 from .forms import HijoForm, LoginForm, UsuarioForm, CarroForm
 from .models import Hijo, Usuario, Carro
@@ -451,3 +452,26 @@ def EstadoCarro(request):
             carro.estado = True
             carro.save()
             return JsonResponse({"success":"Se ha habilitado el carro correctamente"},status=200)
+
+
+class Rutas(ListView):
+    model=Carro
+    template_name="rutas.html"
+    context_object_name = "carros"
+
+    def post(self, request, *args, **kwargs):
+        placa = request.POST.get("placa")
+        estudiantes = Hijo.objects.filter(placa=placa).order_by("posicion")
+        ctx={"estudiantes":estudiantes}
+        ctx["placa"]=placa
+        return render(request, "Rutas/rutaEstudiantes.html", ctx)
+
+class AgregarEstudianteRuta(View):
+    def get(self, request, *args, **kwargs):
+        placa = kwargs["placa"]
+        estudiantes = Hijo.objects.filter(placa=None).exclude(placa=placa)
+        ctx={"estudiantes":estudiantes, "placa":placa}
+        return render(request, "Rutas/agregarEstudiante.html", ctx)
+
+    def post(self, request, *args, **kwargs):
+        pass

@@ -30,7 +30,7 @@ class Hijo(models.Model):
     apellidos = models.CharField("Apellido del hijo", blank=False, null=False, max_length=25)
     latitud = models.FloatField("latitud donde vive",blank=False, null=False) #validacion de minimo 5 caracteres despues del punto
     longitud = models.FloatField("longitud donde vive",blank=False, null=False) 
-    placa = models.ForeignKey(Carro, on_delete=models.SET_NULL, null=True, blank=False)
+    placa = models.ForeignKey(Carro, on_delete=models.SET_NULL, null=True, blank=True)
     posicion = models.IntegerField("Posicion del hijo")
     estado = models.BooleanField("Estado del viaje", default=True)
     class Meta:

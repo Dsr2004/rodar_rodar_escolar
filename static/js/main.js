@@ -221,3 +221,15 @@ function cambiar_estado_carro(url, placa){
   
   
   }
+
+  // GESTION DE RUTAS
+
+function BuscarRuta(placa){
+  $("#"+placa).submit()
+}
+
+function AgregarEstudianteRuta(url){
+  $("#AgregarEstudianteRutaModal").load(url, function (){ 
+    $(this).appendTo("body").modal('show');
+  });
+}
