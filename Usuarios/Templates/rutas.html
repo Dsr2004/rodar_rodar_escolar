@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+{% block titulo %}Administración de Rutas{% endblock titulo %}
+{% block extendHead %}
+{% endblock extendHead %}
+
+{% block contenido %}
+<div class="row">
+    <div class="col-10">
+        <h1>Administración de Rutas</h1>
+    </div>
+    
+</div>
+<hr>
+<div class="row">
+{% for carro in carros %}
+<div class="col-sm-3" style="cursor: pointer; margin: 10px;" onclick="BuscarRuta('{{carro.placa}}')">
+    <form action="" method="post" id="{{carro.placa}}">
+        {% csrf_token %}
+        <input type="hidden" value="{{carro.placa}}" name="placa">
+    </form>
+    <div class="card" style="width: 18rem; padding: 15px;">
+        <div class="card-body">
+            <i class="fas fa-car fa-2xl"></i> <strong>Placa:</strong> {{carro.placa}}
+        </div>
+      </div>
+</div>
+{% endfor %}
+</div>
+
+{% endblock contenido %}
+
+{% block extendScript %}
+<script src="{% static 'libs/sweetalert/sweetalert.js' %}"></script>
+{% endblock extendScript %}

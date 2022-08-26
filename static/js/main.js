@@ -75,7 +75,7 @@ function cambiar_estado_usuario(url, id){
       ) {
         swalWithBootstrapButtons.fire(
           'Canecelado',
-          'No se han aplicado cambios al usuario :)',
+          'No se han aplicado cambios al usuario ',
           'error'
         ).then(function(){
           location.reload();
@@ -146,7 +146,7 @@ const swalWithBootstrapButtons = Swal.mixin({
     ) {
       swalWithBootstrapButtons.fire(
         'Canecelado',
-        'No se han aplicado cambios al estudiante :)',
+        'No se han aplicado cambios al estudiante ',
         'error'
       ).then(function(){
         location.reload();
@@ -211,7 +211,7 @@ function cambiar_estado_carro(url, placa){
       ) {
         swalWithBootstrapButtons.fire(
           'Canecelado',
-          'No se han aplicado cambios al carro :)',
+          'No se han aplicado cambios al carro ',
           'error'
         ).then(function(){
           location.reload();
