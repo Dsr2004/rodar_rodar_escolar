@@ -253,7 +253,6 @@ def RecargarRuta(request):
         placa = request.POST.get('placa')
         posicion = request.POST.get('posicion')
         hijos=Hijo.objects.filter(placa=placa).filter(posicion__lte=posicion)
-    hijoBuscado = Hijo.objects.get(placa=placa, posicion=posicion)
     Lat=[]
     Lon=[]
     Pos=[]
@@ -368,7 +367,7 @@ def RecargarRuta(request):
         "lat_k" :  lat_k,
         "long_k" : long_k,
         "origin": f'{lat_a}, {long_a}',
-        "destination": f'{lat_b}, {long_b}',
+        "destiantion": f'{lat_b}, {long_b}',
         "directions": directions,
         "placa": placa,
         "posicion":posicion
