@@ -44,7 +44,7 @@ class HijoForm(forms.ModelForm):
             'apellidos': forms.TextInput(attrs={'class': 'form-control', "autocomplete": "off"}),
             'latitud': forms.NumberInput(attrs={'class': 'form-control', "autocomplete": "off"}),
             'longitud': forms.NumberInput(attrs={'class': 'form-control', "autocomplete": "off"}),
-            'placa': forms.Select(attrs={'class': 'form-control', "autocomplete": "off"}),
+            'placa': forms.Select(attrs={'class': 'form-select', "autocomplete": "off"}),
             'posicion': forms.NumberInput(attrs={'class': 'form-control', "autocomplete": "off"}),
             'estado': forms.HiddenInput(attrs={'class': 'form-control', "autocomplete": "off"}),
         }
@@ -54,8 +54,15 @@ class HijoForm(forms.ModelForm):
     
     def clean_posicion(self):
         posicion = self.cleaned_data.get("posicion")
+        self.posicion = posicion
         return posicion
+        # estudiantes = Hijo.objects.filter(placa=self.placa)
+        # for estudiante in estudiantes:
+        #     if estudiante.posicion == self.posicion:
+        #         raise forms.ValidationError(f"Ya existe un niño con la posición {self.posicion}")
         
+        
+
 class CarroForm(forms.ModelForm):
     class Meta:
         model = Carro
@@ -67,7 +74,42 @@ class CarroForm(forms.ModelForm):
             'color': forms.TextInput(attrs={'class': 'form-control', "autocomplete": "off"}),
             'telefono_conductor': forms.TextInput(attrs={'class': 'form-control', "autocomplete": "off"}),
             'estado': forms.HiddenInput(attrs={'class': 'form-control', "autocomplete": "off"}),
-
         }
 
-
+class CambiarContrasena(forms.ModelForm):
+    password2 = forms.CharField(label="Confirmar contraseña",widget=forms.PasswordInput(
+        attrs={
+            'id':"confpassword",
+            'requerid':'requerid',
+            'name':'passwordC',
+            "class":"form-control",
+        }
+    ))
+    passwordA = forms.CharField(label="Contraseña antigua",widget=forms.PasswordInput(
+        attrs={
+            'id':"newpassword",
+            'requerid':'requerid',
+            'name':'passwordA',
+            "class":"form-control",
+        }
+    ))
+    
+    class Meta:
+        model = Usuario
+        
+        fields=['password']
+        widgets={
+            'password': forms.PasswordInput(attrs={'class': 'form-control', "autocomplete": "off",'id':"password",'requerid':'requerid','name':'password',}),
+        }
+    def clean_password2(self):
+        """Validación de contraseña
+        
+        
+        Metodo que valida que ambas contraseñas ingresadas sean iguales, antes de ser encriptadas, Retorna la contraseña Validada.
+        """
+        password1 = self.cleaned_data.get('password')
+        password2 = self.cleaned_data.get('passwordC')
+        
+        if password1 != password2:
+            raise forms.ValidationError('Las contraseñas no coinciden')
+        return password2

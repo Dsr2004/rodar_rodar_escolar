@@ -20,7 +20,7 @@
             <tr>
                 <th scope="row">{{forloop.counter}}</th>
                 <td>{{estudiante.get_nombreCompleto}}
-                  <form action="" method="post" id="agregarFormularioForm">
+                  <form action="{% url 'agregarEstudianteRuta' placa %}" method="post" id="AgregarEstudianteRutaForm">
                     {% csrf_token %}
                     <input type="hidden" name="placa" value="{{placa}}">
                     <input type="hidden" name="estudiante" value="{{estudiante.pk}}">
@@ -54,7 +54,7 @@
 <script>
     $(document).ready(function () {
         $('#AgregarEstudianteBoton').click(function() {
-          const swalWithBootstrapButtons = Swal.mixin({
+      const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: 'btn btn-success',
         cancelButton: 'btn btn-danger'
@@ -64,28 +64,29 @@
     
     swalWithBootstrapButtons.fire({
       title: '¿Estás seguro?',
-      text: "Cambiará el estado del carro",
+      text: "Asignará este estudiante al carro",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Si, cambiar!',
+      confirmButtonText: 'Si, asignar!',
       cancelButtonText: 'No, cancelar!',
       confirmButtonClass: "buttonSweetalert",
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
+        var form = $("#AgregarEstudianteRutaForm")
         $.ajax({
-    url: form.attr('action'),
-    type: form.attr('method'),
-    data: form.serialize(),
-    success: function (data) {
-        swal.fire({
-                title: "Exito!",
-                text: "Estudiante agregado con exito!",
-                icon: "success",
-                button: "Aceptar",
-            }).then(function() {
-                location.reload();
-            });
+          url: form.attr('action'),
+          type: form.attr('method'),
+          data: form.serialize(),
+          success: function (data) {
+              swal.fire({
+                      title: "Exito!",
+                      text: "Estudiante agregado con exito!",
+                      icon: "success",
+                      button: "Aceptar",
+                  }).then(function() {
+                      location.reload();
+          });
             
     },error: function (data) {
       swal.fire({
@@ -104,7 +105,7 @@
       ) {
         swalWithBootstrapButtons.fire(
           'Canecelado',
-          'No se han aplicado cambios al estudiante',
+          'No se ha agregado el estudiante al carro',
           'error'
         ).then(function(){
           location.reload();

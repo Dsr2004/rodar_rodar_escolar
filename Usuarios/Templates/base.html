@@ -52,11 +52,16 @@
               " href="{% url 'listarRutas' %}">Administrar Rutas</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{%url 'listarCarros'%}">Ver Carros</a>
+              <a class="nav-link
+              {% if request.path == '/Admin/ListarCarros/'%}active{% endif %}
+              " href="{%url 'listarCarros'%}">Ver Carros</a>
             </li>
             {%endif%}
+            <hr>
+            <li class="nav-item">
+              <p class="nav-link" onclick="changePass('{%url 'changePass'%}')" style="cursor: pointer;">Cambiar Contraseña</p>
+            </li>
           </ul> 
-
           <a  class="btn btn-ligth btn-close-session" href="{% url 'logout' %}"><i class="fa-solid fa-power-off"></i></a>
         </div>
       </div>
@@ -68,6 +73,8 @@
         {% block contenido %}{% endblock contenido %}
             
        </div>
+       <div class="modal fade" id="CambiarContrasena" role="dialog" >
+      </div>
 </body>
 <script src="{% static 'libs/jquery/jquery.min.js' %}"></script>
 <script src="{% static 'libs/bootstrap/js/bootstrap.js' %}"></script>

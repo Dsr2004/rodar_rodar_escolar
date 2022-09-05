@@ -9,6 +9,7 @@ urlpatterns = [
     path('VerUsuario/<int:pk>/', login_required(VerUsuario.as_view()), name='verUsuario'),
     path('EstadoUsuario/', login_required(EstadoUsuario), name='estadoUsuario'),
     path('EditarUsuario/<int:pk>/', login_required(EditarUsuario.as_view()), name='editarUsuario'),
+    path('CambiarContrasena/', login_required(CambiarContrasena.as_view()), name='changePass'),
     #Estudiantes
     path('ListarEstudiantes/', login_required(Estudiantes.as_view()), name='listarEstudiantes'),
     path('CrearEstudiante/', login_required(CrearEstudiante.as_view()), name='crearEstudiante'),
@@ -22,5 +23,7 @@ urlpatterns = [
     path('EstadoCarro/', login_required(EstadoCarro), name='estadoCarro'),
     #Rutas
      path('ListarRutas/', login_required(Rutas.as_view()), name='listarRutas'),
-     path('AgregarEstudianteRuta/<str:placa>', login_required(AgregarEstudianteRuta.as_view()), name="agregarEstudianteRuta")
+     path('AgregarEstudianteRuta/<str:placa>', login_required(AgregarEstudianteRuta.as_view()), name="agregarEstudianteRuta"),
+     path("QuitarEstudianteRuta/", login_required(QuitarEstudianteRuta.as_view()), name="quitarEstudianteRuta"),
+     path("CambiarEstudiantesRuta/<str:placa>", login_required(CambiarEstudiantesRuta.as_view()), name="cambiarEstudiantesRuta")
 ]

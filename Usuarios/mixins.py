@@ -18,10 +18,20 @@ def Directions(*args, **kwargs):
     long_e = kwargs.get("long_e")
     lat_f = kwargs.get("lat_f")
     long_f = kwargs.get("long_f")
+    lat_g = kwargs.get("lat_g")
+    long_g = kwargs.get("long_g")
+    lat_h = kwargs.get("lat_h")
+    long_h = kwargs.get("long_h")
+    lat_i = kwargs.get("lat_i")
+    long_i = kwargs.get("long_i")
+    lat_j = kwargs.get("lat_j")
+    long_j = kwargs.get("long_j")
+    lat_k =  kwargs.get("lat_k")
+    long_k = kwargs.get("long_k")
 
     origin = f'{lat_a},{long_a}'
     destination = f'{lat_b},{long_b}'
-    waypoints = f'{lat_c},{long_c}|{lat_d},{long_d}|{lat_e},{long_e}|{lat_f},{long_f}'
+    waypoints = f'{lat_c},{long_c}|{lat_d},{long_d}|{lat_e},{long_e}|{lat_f},{long_f}|{lat_g},{long_g}|{lat_h},{long_h}|{lat_i},{long_i}|{lat_j},{long_j}|{lat_k},{long_k}'
     result = requests.get(
         'https://maps.googleapis.com/maps/api/directions/json?',
          params={
@@ -57,6 +67,7 @@ def Directions(*args, **kwargs):
                 }
             route_list.append(route_step)
     else:
+        print(directions["status"])
         print("Error entre al else dentro de else de los mixins")
 
     return {

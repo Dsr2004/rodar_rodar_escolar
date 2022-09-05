@@ -3,10 +3,12 @@ import random
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from turtle import position
 from django.template.loader import render_to_string
 # ***********correo***********
 
 from django.db import models
+from django.db.models import Max
 from  django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core.validators import MinLengthValidator
 from django.db.models.signals import pre_save
@@ -31,7 +33,7 @@ class Hijo(models.Model):
     latitud = models.FloatField("latitud donde vive",blank=False, null=False) #validacion de minimo 5 caracteres despues del punto
     longitud = models.FloatField("longitud donde vive",blank=False, null=False) 
     placa = models.ForeignKey(Carro, on_delete=models.SET_NULL, null=True, blank=True)
-    posicion = models.IntegerField("Posicion del hijo")
+    posicion = models.IntegerField("Posicion del hijo", null=True, blank=True)
     estado = models.BooleanField("Estado del viaje", default=True)
     class Meta:
         db_table = "hijos"
@@ -123,7 +125,25 @@ def pre_save_usuario(sender, instance, *args, **kwargs):
             password = "1234"
             instance.set_password(password)
 
+def pre_save_hijo(sender, instance, *args, **kwargs):
+    if instance._state.adding is True:
+        print("me estoy agregando")
+        if not instance.posicion:
+            estudianteMayor = Hijo.objects.filter(placa=instance.placa)
+            if estudianteMayor:
+                estudianteMayor = estudianteMayor.aggregate(Max("posicion"))
+                estudianteMayor = estudianteMayor['posicion__max']
+            else:
+                estudianteMayor = 0
+            instance.posicion =  estudianteMayor+1
+        
+    # if instance.posicion:
+    #     estudiantes = Hijo.objects.filter(placa=instance.placa)
+    #     for estudiante in estudiantes:
+    #         if estudiante.posicion == instance.posicion:
+    #             raise Exception(f"Ya existe un niño con la posición {instance.posicion}")
+
 
 pre_save.connect(pre_save_usuario, sender=Usuario)
-
+pre_save.connect(pre_save_hijo, sender=Hijo)
 

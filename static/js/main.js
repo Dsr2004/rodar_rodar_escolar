@@ -22,7 +22,11 @@ $("#CraerUsuarioModal").load(url, function (){
   $(this).appendTo("body").modal('show');
 });
 }
-
+function changePass(url){
+  $("#CambiarContrasena").load(url, function (){ 
+    $(this).appendTo("body").modal('show');
+  });
+  }
 function ver_usuario_modal(url){
   $("#VerUsuarioModal").load(url, function (){ 
     $(this).appendTo("body").modal('show');
@@ -232,4 +236,71 @@ function AgregarEstudianteRuta(url){
   $("#AgregarEstudianteRutaModal").load(url, function (){ 
     $(this).appendTo("body").modal('show');
   });
+}
+
+function CambiarRutaEstudiantes(url){
+  $("#CambiarRutaEstudiantesModal").load(url, function (){ 
+    $(this).appendTo("body").modal('show');
+  });
+}
+
+function QuitarEstudianteRuta(url , estudiante){
+  const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+      confirmButton: 'btn btn-success',
+      cancelButton: 'btn btn-danger'
+    },
+    buttonsStyling: false
+  })
+  
+  swalWithBootstrapButtons.fire({
+    title: '¿Estás seguro?',
+    text: "Dejara a este estudiante sin el puesto en el carro",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Si, retirar!',
+    cancelButtonText: 'No, cancelar!',
+    confirmButtonClass: "buttonSweetalert",
+    reverseButtons: true
+  }).then((result) => {
+    if (result.isConfirmed) {
+      var form = $("#AgregarEstudianteRutaForm")
+      $.ajax({
+        url: url,
+        type: "POST",
+        data: {"csrfmiddlewaretoken":csrftoken, "id":estudiante},
+        success: function (data) {
+            swal.fire({
+                    title: "Exito!",
+                    text: "Estudiante quitado con exito!",
+                    icon: "success",
+                    button: "Aceptar",
+                }).then(function() {
+                    location.reload();
+        });
+          
+  },error: function (data) {
+    swal.fire({
+              title: "Error!",
+              text: "No se pudo completar la accion",
+              icon: "error",
+              button: "Aceptar",
+          }).then(function() {
+              location.reload();
+          });
+  }
+});
+         
+    } else if (
+      result.dismiss === Swal.DismissReason.cancel
+    ) {
+      swalWithBootstrapButtons.fire(
+        'Canecelado',
+        'No se ha removido el estudiante del carro',
+        'error'
+      ).then(function(){
+        location.reload();
+      })
+    }
+  })
 }

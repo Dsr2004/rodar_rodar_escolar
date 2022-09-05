@@ -14,7 +14,7 @@
 <hr>
 <div class="row">
 {% for carro in carros %}
-<div class="col-sm-3" style="cursor: pointer; margin: 10px;" onclick="BuscarRuta('{{carro.placa}}')">
+<div class="col-md-4" style="cursor: pointer; margin-bottom: 20px;" onclick="BuscarRuta('{{carro.placa}}')">
     <form action="" method="post" id="{{carro.placa}}">
         {% csrf_token %}
         <input type="hidden" value="{{carro.placa}}" name="placa">

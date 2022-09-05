@@ -1,0 +1,123 @@
+<div class="modal-dialog  modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Cambiar ruta de los  Estudiante</strong></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      
+      {% if estudiantes %}
+      <table class="table" id="CambiarRutaTable" style="width: 100%">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Estudiante</th>
+            <th scope="col">Posicion</th>
+          </tr>
+        </thead>
+        <tbody>
+            <script>
+                var cantEstudiante=[]
+            </script>
+            {% for estudiante in estudiantes %}
+            <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td>{{estudiante.get_nombreCompleto}}</td>
+                <td><input class="form-control" type="number" name="posicion" value="{{estudiante.posicion}}" id="estudiante{{estudiante.pk}}"></td>
+            </tr>
+            <script>
+                cantEstudiante.push('{{estudiante.pk}}')
+            </script>
+            {% endfor %}
+        </tbody>
+      </table>
+      <button onclick="guardarCambiosDeLaRutaEstudiante()">Guardar Cambios</button>
+      {% else %}
+      <h2>No hay estudiantes que se puedan asociar a esta ruta</h2>
+      {% endif %}
+        
+        <hr>
+        <!-- <button id="CrearEstudianteBoton" class="btn btn-success w-100">Crear Estudiante</button> -->
+      </div>
+    </div>
+</div>
+<script>
+  $(document).ready(function () {
+   $('#HijosDisponiblesTable').DataTable({
+         "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+        },
+        responsive:true
+   });
+ });
+</script>
+<script>
+function guardarCambiosDeLaRutaEstudiante(){
+    datos=[]
+    definirPosiciones = cantEstudiante.forEach(pk =>{
+        datos.push({'pk':pk, 'posicion':document.getElementById("estudiante"+pk).value})
+    })
+
+    const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+      confirmButton: 'btn btn-success',
+      cancelButton: 'btn btn-danger'
+    },
+    buttonsStyling: false
+  })
+  
+  swalWithBootstrapButtons.fire({
+    title: '¿Estás seguro?',
+    text: "Modificará las posiciones de los estudiantes",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Si, Modificar!',
+    cancelButtonText: 'No, cancelar!',
+    confirmButtonClass: "buttonSweetalert",
+    reverseButtons: true
+  }).then((result) => {
+    if (result.isConfirmed) {
+      var form = $("#AgregarEstudianteRutaForm")
+      $.ajax({
+        url:"{%url 'cambiarEstudiantesRuta' placa%}",
+        data:{"datos[]":JSON.stringify(datos), "csrfmiddlewaretoken":csrftoken},
+        type:"POST",
+        success: function (data) {
+            swal.fire({
+                    title: "Exito!",
+                    text: "Ruta Modifica con exito!",
+                    icon: "success",
+                    button: "Aceptar",
+                }).then(function() {
+                    location.reload();
+        });
+          
+  },error: function (data) {
+    swal.fire({
+              title: "Error!",
+              text: "No se pudo completar la accion",
+              icon: "error",
+              button: "Aceptar",
+          }).then(function() {
+              location.reload();
+          });
+  }
+});
+         
+    } else if (
+      result.dismiss === Swal.DismissReason.cancel
+    ) {
+      swalWithBootstrapButtons.fire(
+        'Canecelado',
+        'No se ha removido el estudiante del carro',
+        'error'
+      ).then(function(){
+        location.reload();
+      })
+    }
+  })
+}
+</script>
+
+
+

@@ -41,7 +41,11 @@
             <td>{{hijo.get_nombreCompleto}}</td>
             <td>{{hijo.latitud}}</td>
             <td>{{hijo.longitud}}</td>
-            <td>{{hijo.placa}}</td>
+            <td>{% if hijo.placa %}
+                {{hijo.placa}}
+                {% else %}
+                No tiene
+            {% endif %}</td>
             <td><a type="button" class="btn btn btn-outline-info btn-sm" onclick="ver_estudiante_modal('{%url 'verEstudiante' hijo.pk%}')"><i class="fa-solid fa-eye"></i></a></td>
             <td><a type="button" class="btn btn btn-outline-warning btn-sm" onclick="editar_estudiante_modal('{%url 'editarEstudiante' hijo.pk%}')"><i class="fa-solid fa-pencil"></i></a></td>
             <td>

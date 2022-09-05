@@ -28,7 +28,7 @@
             <th scope="row">{{forloop.counter}}</th>
             <td>{{estudiante.get_nombreCompleto}}</td>
             <td>{{estudiante.posicion}}</td>
-            <td><a href="#" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-circle-minus fa-xl"></i></a></td>
+            <td><a onclick="QuitarEstudianteRuta('{% url 'quitarEstudianteRuta'%}', '{{estudiante.pk}}')" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-circle-minus fa-xl"></i></a></td>
         </tr>
         {% endfor %}
     </tbody>
@@ -45,7 +45,7 @@
           <a onclick="AgregarEstudianteRuta('{% url 'agregarEstudianteRuta' placa %}' )" class="btn btn-outline-success w-100" ><i class="fa-solid fa-child"></i> Agregar estudiante</a>
         </div>
         <div class="col-6">
-          <a href="" class="btn btn-outline-warning w-100" ><i class="fa-solid fa-map-location-dot"></i> Cambiar posiciones</a>
+          <a onclick="CambiarRutaEstudiantes('{% url 'cambiarEstudiantesRuta' placa %}' )" class="btn btn-outline-warning w-100" ><i class="fa-solid fa-map-location-dot"></i> Cambiar posiciones</a>
       </div>
       </div>
     </div>
@@ -53,6 +53,8 @@
 
 
 <div class="modal fade" id="AgregarEstudianteRutaModal" role="dialog" >
+</div>
+<div class="modal fade" id="CambiarRutaEstudiantesModal" role="dialog" >
 </div>
 {% endblock contenido %}
 
