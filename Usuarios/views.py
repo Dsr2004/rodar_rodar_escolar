@@ -1,4 +1,5 @@
 from operator import ge
+import re
 from webbrowser import get
 import pandas as pd
 import json
@@ -121,8 +122,6 @@ def logout(request):
     logout(request)
 
 def BuscarRuta(request, placa, posicion):
-    print(placa)
-    print(posicion)
     hijos=Hijo.objects.filter(placa=placa).filter(posicion__lte=posicion)
     hijoBuscado = Hijo.objects.get(placa=placa, posicion=posicion)
     Lat=[]
@@ -250,98 +249,97 @@ def BuscarRuta(request, placa, posicion):
 
 def RecargarRuta(request):
     if request.method == "POST":
-        placa = request.POST.get('placa')
-        posicion = request.POST.get('posicion')
+        placa = request.POST.get("placa")
+        posicion = request.POST.get("posicion")
         hijos=Hijo.objects.filter(placa=placa).filter(posicion__lte=posicion)
-    Lat=[]
-    Lon=[]
-    Pos=[]
-    df = pd.DataFrame()
-    for hijo in hijos:
-        Lat.append(hijo.latitud)
-        Lon.append(hijo.longitud)
-        Pos.append(hijo.posicion)
-    df['Lat'] = Lat
-    df['Lon'] = Lon
-    df['Pos'] = Pos
+        Lat=[]
+        Lon=[]
+        Pos=[]
+        df = pd.DataFrame()
+        for hijo in hijos:
+            Lat.append(hijo.latitud)
+            Lon.append(hijo.longitud)
+            Pos.append(hijo.posicion)
+        df['Lat'] = Lat
+        df['Lon'] = Lon
+        df['Pos'] = Pos
 
-    #"---------------------------------"
-    # long_a, lat_a= Locali_placa(placa)#inicio
+        #"---------------------------------"
+        # long_a, lat_a= Locali_placa(placa)#inicio
 
-    # long_a = -75.557174
-    # lat_a = 6.319017
-    long_a = -75.636635
-    lat_a = 6.27383
-    df = df.append({"Lat":lat_a, "Lon":long_a, "Pos": 0}, ignore_index=True)
+        # long_a = -75.557174
+        # lat_a = 6.319017
+        long_a = -75.636635
+        lat_a = 6.27383
 
-    df.sort_values(by=['Pos'], inplace=True)
-    df.reset_index(drop=True, inplace=True)
+        df = df.append({"Lat":lat_a, "Lon":long_a, "Pos": 0}, ignore_index=True)
 
-    while len(df) != 11:
-        df.loc[len(df)] = [df['Lat'][len(df) - 1],
-                           df['Lon'][len(df) - 1], df['Pos'][len(df) - 1]+1]
+        df.sort_values(by=['Pos'], inplace=True)
+        df.reset_index(drop=True, inplace=True)
 
-    #el b es el ultimo de todos los puntos
-    lat_b = df.Lat[10]
-    long_b = df.Lon[10] #CARRO 10
+        while len(df) != 11:
+            df.loc[len(df)] = [df['Lat'][len(df) - 1],
+                            df['Lon'][len(df) - 1], df['Pos'][len(df) - 1]+1]
 
-    #estos son los waipoints
-    lat_c = df.Lat[1]
-    long_c = df.Lon[1]#CARRO 1
-    lat_d = df.Lat[2]
-    long_d = df.Lon[2]#CARRO 2
-    lat_e = df.Lat[3]
-    long_e = df.Lon[3]#CARRO 3
-    lat_f = df.Lat[4]
-    long_f = df.Lon[4]#CARRO 4
-    lat_g = df.Lat[5]
-    long_g = df.Lon[5]#CARRO 5
-    lat_h = df.Lat[6]
-    long_h = df.Lon[6]#CARRO 6
-    lat_i = df.Lat[7]
-    long_i = df.Lon[7]#CARRO 7
-    lat_j = df.Lat[8]
-    long_j = df.Lon[8]#CARRO 9
-    lat_k= df.Lat[9]
-    long_k = df.Lon[9]#CARRO 9
+        #el b es el ultimo de todos los puntos
+        lat_b = df.Lat[10]
+        long_b = df.Lon[10] #CARRO 10
 
-    
+        #estos son los waipoints
+        lat_c = df.Lat[1]
+        long_c = df.Lon[1]#CARRO 1
+        lat_d = df.Lat[2]
+        long_d = df.Lon[2]#CARRO 2
+        lat_e = df.Lat[3]
+        long_e = df.Lon[3]#CARRO 3
+        lat_f = df.Lat[4]
+        long_f = df.Lon[4]#CARRO 4
+        lat_g = df.Lat[5]
+        long_g = df.Lon[5]#CARRO 5
+        lat_h = df.Lat[6]
+        long_h = df.Lon[6]#CARRO 6
+        lat_i = df.Lat[7]
+        long_i = df.Lon[7]#CARRO 7
+        lat_j = df.Lat[8]
+        long_j = df.Lon[8]#CARRO 9
+        lat_k= df.Lat[9]
+        long_k = df.Lon[9]#CARRO 9
 
 
-    dif_lat = abs(lat_a - lat_k)
-    dif_log = abs(long_a - long_k)
 
-    # funcion que cambia el estado de la posicion de un hijo
-    if dif_lat < 0.0005 and dif_log < 0.0005:
-        Hijo.objects.filter(placa=placa).filter(posicion=posicion).update(estado=False)
-        
+        dif_lat = abs(lat_a - lat_k)
+        dif_log = abs(long_a - long_k)
 
-    if lat_a and lat_b and lat_c and lat_d:
-        directions = Directions(
-        lat_a= lat_a,
-        long_a=long_a,
-        lat_b = lat_b,
-        long_b=long_b,
-        lat_c= lat_c,
-        long_c=long_c,
-        lat_d = lat_d,
-        long_d=long_d,
-        lat_e= lat_e,
-        long_e=long_e,
-        lat_f= lat_f,
-        long_f=long_f,
-        lat_g = lat_g,
-        long_g = long_g, 
-        lat_h = lat_h,
-        long_h = long_h,
-        lat_i = lat_i,
-        long_i = long_i,
-        lat_j = lat_j,
-        long_j = long_j,
-        lat_k =  lat_k,
-        long_k = long_k 
-        )
+        # funcion que cambia el estado de la posicion de un hijo
+        if dif_lat < 0.0005 and dif_log < 0.0005:
+            Hijo.objects.filter(placa=placa).filter(posicion=posicion).update(estado=False)
+            
 
+        if lat_a and lat_b and lat_c and lat_d:
+            directions = Directions(
+            lat_a= lat_a,
+            long_a=long_a,
+            lat_b = lat_b,
+            long_b=long_b,
+            lat_c= lat_c,
+            long_c=long_c,
+            lat_d = lat_d,
+            long_d=long_d,
+            lat_e= lat_e,
+            long_e=long_e,
+            lat_f= lat_f,
+            long_f=long_f,
+            lat_g = lat_g,
+            long_g = long_g, 
+            lat_h = lat_h,
+            long_h = long_h,
+            lat_i = lat_i,
+            long_i = long_i,
+            lat_j = lat_j,
+            long_j = long_j,
+            lat_k =  lat_k,
+            long_k = long_k,
+            )
         context = {
         "google_api_key": settings.API_KEY,
         "lat_a": lat_a,
@@ -367,7 +365,7 @@ def RecargarRuta(request):
         "lat_k" :  lat_k,
         "long_k" : long_k,
         "origin": f'{lat_a}, {long_a}',
-        "destiantion": f'{lat_b}, {long_b}',
+        "destination": f'{lat_b}, {long_b}',
         "directions": directions,
         "placa": placa,
         "posicion":posicion

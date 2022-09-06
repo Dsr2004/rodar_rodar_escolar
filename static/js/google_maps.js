@@ -133,16 +133,19 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
         origin: origin,
         destination: destination,
         waypoints: waypts,
-        optimizeWaypoints: false,
         travelMode: google.maps.TravelMode.DRIVING,
     }, function(response, status) {
       if (status === 'OK') {
+        console.log(origin)
+        console.log(destination)
+        console.log(waypts)
+        console.log("sin error")
         directionsDisplay.setDirections(response);
       } else {
         console.log(origin)
         console.log(destination)
         console.log(waypts)
-
+        console.log("sin error")
         alert('Directions request failed due to ' + status);
       }
     });
@@ -185,6 +188,32 @@ setTimeout(()=>{
       origin = JSON.stringify(data['origin']);
       destination = JSON.stringify(data['destination'])
       directions = JSON.stringify(data['directions'])
+
+      console.log(lat_a,
+        long_a,
+        lat_b,
+        long_b,
+        lat_c,
+        long_c,
+        lat_d,
+        long_d,
+        lat_e,
+        long_e,
+        lat_f,
+        long_f,
+        lat_g,
+        long_g,
+        lat_h,
+        long_h,
+        lat_i,
+        long_i,
+        lat_j,
+        long_j,
+        lat_k,
+        long_k,
+        origin,
+        destination,
+        directions)
       document.getElementById('duracion').innerHTML = JSON.stringify(data['directions']['duration']).replace(/['"]+/g, '').replace("minutes","minutos").replace("and","y").replace("seconds","segundos");
       document.getElementById('distancia').innerHTML = JSON.stringify(data['directions']['distance']).replace(/['"]+/g, '');
       if (repeat == true) {
