@@ -3,7 +3,6 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=" + google_api_key + "&
     google.maps.event.addDomListener(window, "load", initMap)
 })
 
-
 function initMap() {
     var directionsService = new google.maps.DirectionsService;
     var directionsDisplay = new google.maps.DirectionsRenderer;
@@ -67,13 +66,13 @@ setTimeout(()=>{
       long_e = parseFloat(JSON.stringify(data['long_e']));
       lat_f = parseFloat(JSON.stringify(data['lat_f']));
       long_f = parseFloat(JSON.stringify(data['long_f']));
-      origin = JSON.stringify(data['origin']);
-      destination = JSON.stringify(data['destination'])
-      directions = JSON.stringify(data['directions'])
+      origin = JSON.stringify(data['origin']).replace(/['"]+/g, '');
+      destination = JSON.stringify(data['destination']).replace(/['"]+/g, '');
+      directions = JSON.stringify(data['directions']);
       document.getElementById('duracion').innerHTML = JSON.stringify(data['directions']['duration']).replace(/['"]+/g, '').replace("minutes","minutos").replace("and","y").replace("seconds","segundos");
       document.getElementById('distancia').innerHTML = JSON.stringify(data['directions']['distance']).replace(/['"]+/g, '');
       if (repeat == true) {
-        initMap();
+        initMap()
         reload(); 
       }
     },
