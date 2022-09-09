@@ -12,6 +12,7 @@ from django.conf import settings
 from django.urls import reverse_lazy
 from django.views.generic import  View, CreateView, ListView, UpdateView, DeleteView, DetailView, TemplateView
 from django.db.models import Max
+
 from .forms import HijoForm, LoginForm, UsuarioForm, CarroForm, CambiarContrasena
 from .models import Hijo, Usuario, Carro
 from .mixins import Directions, if_admin
@@ -600,6 +601,7 @@ class CambiarEstudiantesRuta(View):
             print(estudiante.posicion)
             estudiante.save()
         return JsonResponse({"correcto":"hola"}, status=200)
+
 
 class CambiarContrasena(TemplateView):
     model = Usuario

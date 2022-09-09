@@ -94,7 +94,6 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=" + google_api_key + "&
     google.maps.event.addDomListener(window, "load", initMap)
 })
 
-
 function initMap() {
     var directionsService = new google.maps.DirectionsService;
     var directionsDisplay = new google.maps.DirectionsRenderer;
@@ -175,49 +174,13 @@ setTimeout(()=>{
       long_e = parseFloat(JSON.stringify(data['long_e']));
       lat_f = parseFloat(JSON.stringify(data['lat_f']));
       long_f = parseFloat(JSON.stringify(data['long_f']));
-      lat_g = parseFloat(JSON.stringify(data['lat_g']));
-      long_g = parseFloat(JSON.stringify(data['long_g']));
-      lat_h = parseFloat(JSON.stringify(data['lat_h']));
-      long_h = parseFloat(JSON.stringify(data['long_h']));
-      lat_i = parseFloat(JSON.stringify(data['lat_i']));
-      long_i = parseFloat(JSON.stringify(data['long_i']));
-      lat_j = parseFloat(JSON.stringify(data['lat_j']));
-      long_j = parseFloat(JSON.stringify(data['long_j']));
-      lat_k = parseFloat(JSON.stringify(data['lat_k']));
-      long_k = parseFloat(JSON.stringify(data['long_k']));
-      origin = JSON.stringify(data['origin']);
-      destination = JSON.stringify(data['destination'])
-      directions = JSON.stringify(data['directions'])
-
-      console.log(lat_a,
-        long_a,
-        lat_b,
-        long_b,
-        lat_c,
-        long_c,
-        lat_d,
-        long_d,
-        lat_e,
-        long_e,
-        lat_f,
-        long_f,
-        lat_g,
-        long_g,
-        lat_h,
-        long_h,
-        lat_i,
-        long_i,
-        lat_j,
-        long_j,
-        lat_k,
-        long_k,
-        origin,
-        destination,
-        directions)
+      origin = JSON.stringify(data['origin']).replace(/['"]+/g, '');
+      destination = JSON.stringify(data['destination']).replace(/['"]+/g, '');
+      directions = JSON.stringify(data['directions']);
       document.getElementById('duracion').innerHTML = JSON.stringify(data['directions']['duration']).replace(/['"]+/g, '').replace("minutes","minutos").replace("and","y").replace("seconds","segundos");
       document.getElementById('distancia').innerHTML = JSON.stringify(data['directions']['distance']).replace(/['"]+/g, '');
       if (repeat == true) {
-        initMap();
+        initMap()
         reload(); 
       }
     },

@@ -112,4 +112,12 @@ class CambiarContrasena(forms.ModelForm):
         
         if password1 != password2:
             raise forms.ValidationError('Las contraseñas no coinciden')
+
         return password2
+    
+    def save(self,commit = True):
+        user = super().save(commit = False)
+        user.set_password(self.cleaned_data['password'])
+        if commit:
+            user.save()
+        return user
